@@ -32,6 +32,8 @@ function Map:initialize(id)
 	end
 
 	self.shader1 = love.graphics.newShader[[
+extern float night;
+
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 {
 	vec4 pixel = Texel(texture, texture_coords);
@@ -39,12 +41,17 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 		pixel.a = 0.;
 	}
 
+	if(night > 0){
+		pixel.rgb *= vec3(0.2,0.2,0.2);
+	}
 
 	return pixel;
 }
 ]]
 
 	self.shader2 = love.graphics.newShader[[
+extern float night;
+
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 {
 	vec4 pixel = Texel(texture, texture_coords);
@@ -52,11 +59,16 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 		pixel.a = 0.;
 	}
 
+	if(night > 0){
+		pixel.rgb *= vec3(0.2,0.2,0.2);
+	}
 
 	return pixel;
 }
 ]]
 
+	self.shader1:send("night", 1)
+	self.shader2:send("night", 0)
 end
 
 function Map:update(dt)
@@ -68,6 +80,7 @@ function Map:draw()
 	pos.y = engine.screen.entities[self.id].pos.y
 
 	local size = engine.screen.entities[self.id].size
+	local menuH = engine.screen.menuBar.h
 
 	local posTile = {}
 	posTile.x = math.floor( (pos.x - math.floor(WINDOW_WIDTH/4)) / Tileset.TILESIZE)
@@ -85,10 +98,10 @@ function Map:draw()
 	love.graphics.push()
 
 	if self.id == 1 then
-		love.graphics.translate(-pos.x +math.floor(WINDOW_WIDTH/4) - size/2, -pos.y +math.floor(WINDOW_HEIGHT/2) - size/2)
+		love.graphics.translate(-pos.x +math.floor(WINDOW_WIDTH/4) - size/2, -pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - size/2)
 		love.graphics.setShader(self.shader1)
 	else
-		love.graphics.translate(-pos.x +math.floor(3*WINDOW_WIDTH/4) - size/2, -pos.y +math.floor(WINDOW_HEIGHT/2) - size/2)
+		love.graphics.translate(-pos.x +math.floor(3*WINDOW_WIDTH/4) - size/2, -pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - size/2)
 		love.graphics.setShader(self.shader2)
 	end
 

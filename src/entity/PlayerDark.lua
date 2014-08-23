@@ -4,9 +4,9 @@ local IEntity = require 'entity.IEntity'
 local PlayerDark = class('PlayerDark', IEntity)
 
 function PlayerDark:initialize()
-	self.life = 1
+	self.life = 10
 	self.lvl = 1
-	self.size = 64
+	self.size = 32
 
 	self.pos = {}
 	self.pos.x = 3200
@@ -21,9 +21,10 @@ end
 
 function PlayerDark:draw()
 	love.graphics.setColor(255,0,255)
+	local menuH = engine.screen.menuBar.h
 
 	love.graphics.push()
-	love.graphics.translate(-self.pos.x +math.floor(3*WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2) - self.size/2)
+	love.graphics.translate(-self.pos.x +math.floor(3*WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - self.size/2)
 	love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.size, self.size)
 	love.graphics.pop()
 end

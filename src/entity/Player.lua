@@ -5,9 +5,10 @@ local Player = class('Player', IEntity)
 local PlayerDark = require 'entity.PlayerDark'
 
 function Player:initialize()
-	self.life = 1
+	self.maxLife = 100
+	self.life = 100
 	self.lvl = 1
-	self.size = 64
+	self.size = 32
 
 	self.pos = {}
 	self.pos.x = 3200
@@ -60,14 +61,25 @@ end
 
 function Player:draw()
 	love.graphics.setColor(0,0,0)
+	local menuH = engine.screen.menuBar.h
 
 	love.graphics.push()
-	love.graphics.translate(-self.pos.x +math.floor(WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2)-self.size/2)
+	love.graphics.translate(-self.pos.x +math.floor(WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 -self.size/2)
 	love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.size, self.size)
 	love.graphics.pop()
 end
 
 function Player:onQuit()
+end
+
+function Player:hit(dmg)
+	self.life = self.life - dmg
+	if self.life <= 0 then
+		--TODO ENDSCREEN
+	self.life = 0
+	end
+
+	self.playerDark.life = self.life
 end
 
 function Player:tryMove()

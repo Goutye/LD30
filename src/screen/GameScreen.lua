@@ -3,6 +3,7 @@ local class = require 'middleclass'
 local IScreen = require 'screen.IScreen'
 local GameScreen = class('GameScreen', IScreen)
 
+local MenuBar = require 'MenuBar'
 local Map = require 'Map'
 local Player = require 'entity.Player'
 
@@ -20,9 +21,13 @@ function GameScreen:initialize()
 	self.map = {}
 	self.map[1] = Map:new(1)
 	self.map[2] = Map:new(2)
+
+	self.menuBar = MenuBar:new()
 end
 
 function GameScreen:update(dt)
+	self.menuBar:update(dt)
+
 	for _,b in ipairs(self.building) do
 		b:update(dt)
 	end
@@ -50,7 +55,12 @@ function GameScreen:draw()
 	end
 
 	love.graphics.setColor(0,0,0)
-	love.graphics.line(WINDOW_WIDTH/2,0,WINDOW_WIDTH/2,WINDOW_HEIGHT)
+	love.graphics.line(WINDOW_WIDTH/2,self.menuBar.w,WINDOW_WIDTH/2,WINDOW_HEIGHT)
+	love.graphics.line(0,self.menuBar.h, WINDOW_WIDTH/2-self.menuBar.w/2, self.menuBar.h)
+	love.graphics.line(WINDOW_WIDTH/2+self.menuBar.w/2,self.menuBar.h, WINDOW_WIDTH, self.menuBar.h)
+
+	love.graphics.setColor(255,255,255)
+	self.menuBar:draw()
 
 end
 

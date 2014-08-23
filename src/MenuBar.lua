@@ -45,6 +45,7 @@ function MenuBar:update(dt)
 		engine.screen:generateNightMob(2, hour)
 		self.night = 2
 	end
+	engine.tileShader:send("night", self.night)
 
 	if mouse:isPressed("l") then
 		local x,y = mouse:wherePressed("l")

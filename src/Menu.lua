@@ -9,6 +9,7 @@ local Bucheron = require 'entity.Bucheron'
 local Agriculteur = require 'entity.Agriculteur'
 
 local Tower = require 'entity.Tower'
+local Canon = require 'entity.Canon'
 
 function Menu:initialize()
 	self.choice = {}
@@ -89,19 +90,55 @@ function Menu:update(dt)
 			elseif self.firstChoice == 1 then
 				--Fortress 1
 				if self.choice[self.firstChoice] == 0 then
-					engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1))
+					if fortress1.pierre >= 5 and fortress1.bois >=10 then
+						engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1, 1))
+						fortress1.pierre = fortress1.pierre - 5
+						fortress1.bois = fortress1.bois - 10
+					else
+						self.endSentence = self.endSentence .. "Price : 5 stones & 10 woods!\n"
+					end
 				elseif self.choice[self.firstChoice] == 1 then
-					engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1))
+					if fortress1.pierre >=20 and fortress1.bois >=15 then
+						engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1, 2))
+						fortress1.pierre = fortress1.pierre - 20
+						fortress1.bois = fortress1.bois - 15
+					else
+						self.endSentence = self.endSentence .. "Price : 20 stones & 15 woods!\n"
+					end
 				else
-					engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1))
+					if fortress1.pierre >=60 and fortress1.bois >=30 then
+						engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1, 3))
+						fortress1.pierre = fortress1.pierre - 60
+						fortress1.bois = fortress1.bois - 30
+					else
+						self.endSentence = self.endSentence .. "Price : 60 stones & 30 woods!\n"
+					end
 				end
 				--Fortress 2
 				if self.choice[self.firstChoice] == 0 then
-
+					if fortress2.pierre >= 10 and fortress2.bois >=5 then 
+						engine.screen:addEntity(2, Canon:new(player1.pos.x, player1.pos.y, 2, 1))
+						fortress2.pierre = fortress2.pierre - 10
+						fortress2.bois = fortress2.bois - 5
+					else
+						self.endSentence = self.endSentence .. "Price : 10 stones & 5 woods!\n"
+					end
 				elseif self.choice[self.firstChoice] == 1 then
-
+					if fortress2.pierre >= 15 and fortress2.bois >=20 then 
+						engine.screen:addEntity(2, Canon:new(player1.pos.x, player1.pos.y, 2, 2))
+						fortress2.pierre = fortress2.pierre - 15
+						fortress2.bois = fortress2.bois - 20
+					else
+						self.endSentence = self.endSentence .. "Price : 15 stones & 20 woods!\n"
+					end
 				else
-
+					if fortress2.pierre >= 50 and fortress2.bois >=40 then 
+						engine.screen:addEntity(2, Canon:new(player1.pos.x, player1.pos.y, 2, 3))
+						fortress2.pierre = fortress2.pierre - 50
+						fortress2.bois = fortress2.bois - 40
+					else
+						self.endSentence = self.endSentence .. "Price : 50 stones & 40 woods!\n"
+					end
 				end
 		--CHOIX INVENTAIRE
 			else
@@ -174,13 +211,13 @@ function Menu:draw()
 			love.graphics.printf("Throw meat?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
 			love.graphics.printf("Throw stone?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 100, "center")
 		elseif self.firstChoice == 1 then
-			love.graphics.printf("New Tower", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("New Tower", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("New Tower", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
+			love.graphics.printf("Tower 1 dmg", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
+			love.graphics.printf("Tower 2 dmg", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
+			love.graphics.printf("Tower 3 dmg", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
 
-			love.graphics.printf("New Cannon", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("New Cannon", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("New Cannon", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 100, "center")			
+			love.graphics.printf("Cannon 1 dmg", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
+			love.graphics.printf("Cannon 2 dmg", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
+			love.graphics.printf("Cannon 3 dmg", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 100, "center")			
 		else
 			love.graphics.printf("Throw wood?", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
 			love.graphics.printf("Throw meat?", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")

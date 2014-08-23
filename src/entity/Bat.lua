@@ -5,9 +5,9 @@ local IEntity = require 'entity.IEntity'
 local Bat = class('Bat', IEntity)
 
 function Bat:initialize(x,y,idWorld)
-	self.lvl = 1
-	self.life = 10
-	self.maxLife = 10
+	self.lvl = 1 + math.floor(math.log10(1 + engine.screen.nbEnemyDead))
+	self.life = 10 * self.lvl
+	self.maxLife = 10 * self.lvl
 	self.exp = 2
 	self.pos = {}
 	self.pos.x = x * Tileset.TILESIZE
@@ -68,7 +68,10 @@ function Bat:draw()
 	if engine.screen.menuBar.night == self.idWorld or engine:AABB_AABB(box, engine.screen.fortress[self.idWorld].box) then
 		love.graphics.draw(self.image, self.pos.x, self.pos.y)
 	end
+
+	self:drawLifeBar()
 	love.graphics.setShader()
+
 end
 
 function Bat:hit(dmg)

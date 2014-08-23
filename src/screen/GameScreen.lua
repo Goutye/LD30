@@ -39,6 +39,8 @@ function GameScreen:initialize()
 
 	self.menuIsActiv = false
 	self.menu = Menu:new()
+
+	self.nbEnemyDead = 0
 end
 
 function GameScreen:update(dt)
@@ -83,14 +85,14 @@ function GameScreen:draw()
 		b:draw()
 	end
 	for i = 1,2 do
-		for _,e in ipairs(self.entities[i]) do
-			e:draw()
+		self.entities[i][1]:translate()
+		for i,e in ipairs(self.entities[i]) do
+			if i ~= 1 then
+				e:draw()
+			end
 		end
+		self.entities[i][1]:draw()
 		love.graphics.pop()
-	end
-	
-	for _,p in ipairs(self.entitiesPassiv) do
-		p:draw()
 	end
 
 	love.graphics.setColor(255,255,255)
@@ -102,6 +104,9 @@ function GameScreen:draw()
 		self.menu:draw()
 	end
 
+	for _,p in ipairs(self.entitiesPassiv) do
+		p:draw()
+	end
 
 
 end
@@ -117,6 +122,9 @@ end
 
 function GameScreen:removeEntity(idWorld, id)
 	self.entities[idWorld][id]:onQuit()
+	if not self.entities[idWorld][id].friendly then
+		self.nbEnemyDead = self.nbEnemyDead + 1
+	end
 	table.remove(self.entities[idWorld], id)
 	
 	for i = id, #self.entities[idWorld] do
@@ -140,7 +148,7 @@ end
 
 function GameScreen:fight(idWorld, id, box, dmg)
 	for i,e in ipairs(self.entities[idWorld]) do
-		if i ~= id then
+		if i ~= id and not e.friendly then
 			local box2 = {x = e.pos.x, y = e.pos.y, w = e.w, h = e.h}
 			if engine:AABB_AABB(box, box2) then
 				if e:hit(dmg) and id == 1 then --If Dead & player

@@ -1,9 +1,9 @@
 local class = require 'middleclass'
 
 local IEntity = require 'entity.IEntity'
-local Tower = class('Tower', IEntity)
+local Canon = class('Canon', IEntity)
 
-function Tower:initialize(x,y,idWorld,dmg)
+function Canon:initialize(x,y,idWorld, dmg)
 	self.id = nil
 	self.idWorld = idWorld
 	self.friendly = true
@@ -17,7 +17,7 @@ function Tower:initialize(x,y,idWorld,dmg)
 	self.box = {x = x - self.w/2, y = y-self.h/2, w = self.w, h= self.h}
 	self.circle = { pos = {x = x, y = y}, r = 300}
 
-	self.image = love.graphics.newImage("assets/Tower.png")
+	self.image = love.graphics.newImage("assets/Canon.png")
 
 	self.r = 150
 	self.life = 1
@@ -28,17 +28,14 @@ function Tower:initialize(x,y,idWorld,dmg)
 	self.fire = false
 	self.fireTime = 0
 	self.fireTimeNext = 2
-
-	engine:addLight(engine:vector_copy(self.pos))
 end
 
-function Tower:update(dt)
+function Canon:update(dt)
 	if self.fire then
 		self.fireTime = self.fireTime + dt
 		if self.fireTime >= self.fireTimeNext then
 			self.fire = false
 		end
-		return
 	else
 		for i,e in ipairs(engine.screen.entities[self.idWorld]) do
 			if i ~= 1 and i ~= self.id and not e.friendly then
@@ -52,7 +49,7 @@ function Tower:update(dt)
 	end
 end
 
-function Tower:draw()
+function Canon:draw()
 	love.graphics.setColor(255,255,255)
 	if self.idWorld == 1 then
 		love.graphics.setShader(engine.screen.map[1].shader1)
@@ -63,7 +60,7 @@ function Tower:draw()
 	love.graphics.setShader()
 end
 
-function Tower:onQuit()
+function Canon:onQuit()
 end
 
-return Tower
+return Canon

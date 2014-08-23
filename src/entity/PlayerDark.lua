@@ -60,12 +60,13 @@ function PlayerDark:update(dt)
 	end
 end
 
-function PlayerDark:draw()
+function PlayerDark:translate()
 	local menuH = engine.screen.menuBar.h
-
 	love.graphics.push()
 	love.graphics.translate(-self.pos.x +math.floor(3*WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - self.size/2)
-	
+end
+
+function PlayerDark:draw()
 	if self.image.current == self.image.down then
 		love.graphics.draw(self.image.current, self.pos.x, self.pos.y)
 	end

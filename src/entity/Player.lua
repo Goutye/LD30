@@ -118,6 +118,9 @@ function Player:update(dt)
 		self.spd.y = 0
 	end
 
+	engine.tileShader:send("cameraX", self.pos.x)
+	engine.tileShader:send("cameraY", self.pos.y)
+
 	if engine:AABB_AABB(self:getBox(), engine.screen.fortress[1].boxFull) then
 		engine.screen.fortress[1].bois = self.bois + engine.screen.fortress[1].bois
 		self.bois = 0
@@ -146,12 +149,14 @@ function Player:update(dt)
 	engine.screen.map[2].shader2:send("player",self.pos.x,self.pos.y)
 end
 
-function Player:draw()
-	love.graphics.setColor(255,255,255)
+function Player:translate()
 	local menuH = engine.screen.menuBar.h
-
 	love.graphics.push()
 	love.graphics.translate(-self.pos.x +math.floor(WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 -self.size/2)
+end
+
+function Player:draw()
+	love.graphics.setColor(255,255,255)
 	
 	if self.image.current == self.image.down then
 		love.graphics.draw(self.image.current, self.pos.x, self.pos.y)

@@ -3,17 +3,21 @@ local class = require 'middleclass'
 local IEntity = require 'entity.IEntity'
 local PlayerDark = class('PlayerDark', IEntity)
 
-function PlayerDark:initialize()
+function PlayerDark:initialize(x,y)
 	self.life = 10
 	self.lvl = 1
 	self.size = 32
 
 	self.pos = {}
-	self.pos.x = 3200
-	self.pos.y = 2400
+	self.pos.x = x
+	self.pos.y = y
 	self.spd = {}
 	self.spd.x = 0
 	self.spd.y = 0
+
+	self.pierre = 0
+	self.bois = 0
+	self.nourriture = 0
 end
 
 function PlayerDark:update(dt)
@@ -34,6 +38,7 @@ end
 
 function PlayerDark:tryMove()
 	local x,y = false, false
+	local circle = {pos = {x = engine.screen.fortress[2].pos.x, y = engine.screen.fortress[2].pos.y}, r = engine.screen.fortress[2].pos.r}
 	local posTile = {}
 	posTile.x = math.floor((self.pos.x + self.spd.x) / engine.TILESIZE)
 	posTile.y = math.floor((self.pos.y)/ engine.TILESIZE)
@@ -47,6 +52,8 @@ function PlayerDark:tryMove()
 			engine.screen.map[2].map[posTile.xm][posTile.y] == 0 and
 			engine.screen.map[2].map[posTile.x][posTile.ym] == 0 and
 			engine.screen.map[2].map[posTile.xm][posTile.ym] == 0
+		local box = {x = self.pos.x + self.spd.x, y = self.pos.y, w = self.size, h = self.size}
+		x = x and engine:AABB_inCircle(box, circle, false)
 	end
 
 	posTile.x = math.floor((self.pos.x + self.spd.x) / engine.TILESIZE)
@@ -61,6 +68,9 @@ function PlayerDark:tryMove()
 			engine.screen.map[2].map[posTile.xm][posTile.y] == 0 and
 			engine.screen.map[2].map[posTile.x][posTile.ym] == 0 and
 			engine.screen.map[2].map[posTile.xm][posTile.ym] == 0
+
+		local box = {x = self.pos.x + self.spd.x, y = self.pos.y + self.spd.y, w = self.size, h = self.size}
+		y = y and engine:AABB_inCircle(box, circle, false)
 	end
 
 	if not x and not y then
@@ -76,6 +86,9 @@ function PlayerDark:tryMove()
 				engine.screen.map[2].map[posTile.xm][posTile.y] == 0 and
 				engine.screen.map[2].map[posTile.x][posTile.ym] == 0 and
 				engine.screen.map[2].map[posTile.xm][posTile.ym] == 0
+
+			local box = {x = self.pos.x, y = self.pos.y + self.spd.y, w = self.size, h = self.size}
+			y = y and engine:AABB_inCircle(box, circle, false)
 		end
 	end
 

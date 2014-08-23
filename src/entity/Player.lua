@@ -4,20 +4,24 @@ local IEntity = require 'entity.IEntity'
 local Player = class('Player', IEntity)
 local PlayerDark = require 'entity.PlayerDark'
 
-function Player:initialize()
+function Player:initialize(x,y)
 	self.maxLife = 100
 	self.life = 100
 	self.lvl = 1
 	self.size = 32
 
 	self.pos = {}
-	self.pos.x = 3200
-	self.pos.y = 3200
+	self.pos.x = x
+	self.pos.y = y
 	self.spd = {}
 	self.spd.x = 0
 	self.spd.y = 0
 
-	self.playerDark = PlayerDark:new()
+	self.pierre = 0
+	self.bois = 0
+	self.nourriture = 0
+
+	self.playerDark = PlayerDark:new(x,y)
 end
 
 function Player:update(dt)
@@ -57,6 +61,9 @@ function Player:update(dt)
 	else
 		self.spd.y = 0
 	end
+
+	engine.screen.map[1].shader1:send("player",self.pos.x,self.pos.y)
+	engine.screen.map[2].shader2:send("player",self.pos.x,self.pos.y)
 end
 
 function Player:draw()
@@ -84,6 +91,7 @@ end
 
 function Player:tryMove()
 	local x,y = false, false
+	local circle = {pos = {x = engine.screen.fortress[1].pos.x, y = engine.screen.fortress[1].pos.y}, r = engine.screen.fortress[1].pos.r}
 	local posTile = {}
 	posTile.x = math.floor((self.pos.x + self.spd.x) / engine.TILESIZE)
 	posTile.y = math.floor((self.pos.y)/ engine.TILESIZE)
@@ -96,7 +104,10 @@ function Player:tryMove()
 		x= engine.screen.map[1].map[posTile.x][posTile.y] == 0 and
 			engine.screen.map[1].map[posTile.xm][posTile.y] == 0 and
 			engine.screen.map[1].map[posTile.x][posTile.ym] == 0 and
-			engine.screen.map[1].map[posTile.xm][posTile.ym] == 0
+			engine.screen.map[1].map[posTile.xm][posTile.ym] == 0 
+
+		local box = {x = self.pos.x + self.spd.x, y = self.pos.y, w = self.size, h = self.size}
+		x = x and engine:AABB_inCircle(box, circle, false)
 	end
 
 	posTile.x = math.floor((self.pos.x + self.spd.x) / engine.TILESIZE)
@@ -111,6 +122,9 @@ function Player:tryMove()
 			engine.screen.map[1].map[posTile.xm][posTile.y] == 0 and
 			engine.screen.map[1].map[posTile.x][posTile.ym] == 0 and
 			engine.screen.map[1].map[posTile.xm][posTile.ym] == 0
+
+		local box = {x = self.pos.x + self.spd.x, y = self.pos.y + self.spd.y, w = self.size, h = self.size}
+		y = y and engine:AABB_inCircle(box, circle, false)
 	end
 
 	if not x and not y then
@@ -127,6 +141,8 @@ function Player:tryMove()
 				engine.screen.map[1].map[posTile.x][posTile.ym] == 0 and
 				engine.screen.map[1].map[posTile.xm][posTile.ym] == 0
 		end
+		local box = {x = self.pos.x, y = self.pos.y + self.spd.y, w = self.size, h = self.size}
+		y = y and engine:AABB_inCircle(box, circle, false)
 	end
 
 	return x,y

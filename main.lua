@@ -33,7 +33,7 @@ end
 
 function love.draw()
 	engine:draw()
-	love.graphics.print("FPS : "..love.timer.getFPS(), 10, 10)
+	love.graphics.print("FPS : "..love.timer.getFPS(), 10, 25)
 end
 
 function love.keypressed(key)

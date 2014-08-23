@@ -7,6 +7,7 @@ function Engine:initialize(screen)
 	self.nextScreen = nil
 
 	self.TILESIZE = 64
+	self.TIMEFORONEDAY = 24
 end
 
 function Engine:update(dt)
@@ -94,6 +95,41 @@ function Engine:AABB_circle(box, circle, boolReturnPos)
 	end
 end
 
+function Engine:AABB_inCircle(box, circle, boolReturnPos)
+	local pos = {}
+	pos.x = circle.pos.x
+	pos.y = circle.pos.y
+
+	if pos.x > box.x + box.w - 1 then
+		pos.x = box.x + box.w - 1
+	elseif pos.x < box.x then
+		pos.x = box.x
+	end
+	if pos.y > box.y + box.h - 1 then
+		pos.y = box.y + box.h - 1
+	elseif pos.y < box.y then
+		pos.y = box.y
+	end
+
+	
+	local collision = self:Circle_point(circle, pos)
+	local pos = {}
+	pos[0] = {x = box.x, y = box.y}
+	pos[1] = {x = box.x + box.w-1, y = box.y}
+	pos[2] = {x = box.x, y = box.y + box.h-1}
+	pos[3] = {x = box.x + box.w, y = box.y + box.h}
+
+	for i = 0, 3 do
+		collision = collision and self:Circle_point(circle, pos[i])
+	end
+
+	if boolReturnPos then
+		return collision, pos
+	else
+		return collision
+	end
+end
+
 function Engine:AABB_point(box, point)
 	return point.x >= box.x and point.x <= box.x + box.w - 1 and 
 			point.y >= box.y and point.y <= box.y + box.h - 1 
@@ -108,12 +144,11 @@ end
 
 function Engine:Circle_point(circle, point)
 	local v = self:vector_of(circle.pos, point)
-
-	return self:vector_Length(v) <= circle.r
+	return self:vector_length(v) <= circle.r
 end
 
 function Engine:Circle_circle(circle, circle2)
-	return self:vector_Length(self:vector_of(circle.pos, circle2.pos)) < circle.r + circle2.r
+	return self:vector_length(self:vector_of(circle.pos, circle2.pos)) < circle.r + circle2.r
 end
 
 return Engine

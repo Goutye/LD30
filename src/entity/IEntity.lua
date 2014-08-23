@@ -5,6 +5,7 @@ local IEntity = class('IEntity')
 function IEntity:initialize()
 	self.id = nil
 
+	self.friendly = false
 	self.exp = 1
 	self.life = 1
 	self.lvl = 1
@@ -42,6 +43,11 @@ function IEntity:lootRandom(lvl, idWorld)
 		engine.screen.entities[idWorld][1].nourriture = engine.screen.entities[idWorld][1].nourriture + lvl
 	end
 	print(rand)
+end
+
+function IEntity:getBox()
+	local box = {x = self.pos.x, y = self.pos.y, w = self.w, h = self.h}
+	return box
 end
 
 IEntity.static.SPEED = 500

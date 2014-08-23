@@ -8,6 +8,8 @@ local Mineur = require 'entity.Mineur'
 local Bucheron = require 'entity.Bucheron'
 local Agriculteur = require 'entity.Agriculteur'
 
+local Tower = require 'entity.Tower'
+
 function Menu:initialize()
 	self.choice = {}
 	self.choice[0] = {} --ouvrier
@@ -87,11 +89,11 @@ function Menu:update(dt)
 			elseif self.firstChoice == 1 then
 				--Fortress 1
 				if self.choice[self.firstChoice] == 0 then
-
+					engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1))
 				elseif self.choice[self.firstChoice] == 1 then
-
+					engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1))
 				else
-
+					engine.screen:addEntity(1, Tower:new(player1.pos.x, player1.pos.y, 1))
 				end
 				--Fortress 2
 				if self.choice[self.firstChoice] == 0 then

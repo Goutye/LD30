@@ -31,6 +31,19 @@ function IEntity:giveExp(exp)
 	end 
 end
 
+function IEntity:lootRandom(lvl, idWorld)
+	local rand = love.math.random(0,10)
+
+	if rand == 0 then
+		engine.screen.entities[idWorld][1].bois = engine.screen.entities[idWorld][1].bois + lvl
+	elseif rand == 1 then
+		engine.screen.entities[idWorld][1].pierre = engine.screen.entities[idWorld][1].pierre + lvl
+	elseif rand == 2 then
+		engine.screen.entities[idWorld][1].nourriture = engine.screen.entities[idWorld][1].nourriture + lvl
+	end
+	print(rand)
+end
+
 IEntity.static.SPEED = 500
 IEntity.static.FRICTION = 0.5
 return IEntity

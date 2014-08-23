@@ -145,6 +145,7 @@ function GameScreen:fight(idWorld, id, box, dmg)
 			if engine:AABB_AABB(box, box2) then
 				if e:hit(dmg) and id == 1 then --If Dead & player
 					self.entities[idWorld][1]:giveExp(e.exp)
+					self.entities[idWorld][1]:lootRandom(e.lvl, idWorld)
 				end
 			end
 		end

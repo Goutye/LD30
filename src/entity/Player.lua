@@ -118,6 +118,22 @@ function Player:update(dt)
 		self.spd.y = 0
 	end
 
+	if engine:AABB_AABB(self:getBox(), engine.screen.fortress[1].boxFull) then
+		engine.screen.fortress[1].bois = self.bois + engine.screen.fortress[1].bois
+		self.bois = 0
+		engine.screen.fortress[1].pierre = self.pierre + engine.screen.fortress[1].pierre
+		self.pierre = 0
+		engine.screen.fortress[1].habitant = self.nourriture + engine.screen.fortress[1].habitant
+		self.nourriture = 0
+		engine.screen.fortress[2].bois = self.playerDark.bois + engine.screen.fortress[2].bois
+		self.playerDark.bois = 0
+		engine.screen.fortress[2].pierre = self.playerDark.pierre + engine.screen.fortress[2].pierre
+		self.playerDark.pierre = 0
+		engine.screen.fortress[2].habitant = self.playerDark.nourriture + engine.screen.fortress[2].habitant
+		self.playerDark.nourriture = 0
+	end
+
+
 	if self.immortal then
 		self.time = self.time + dt
 		if self.time >= self.timeImmortal then
@@ -149,7 +165,6 @@ function Player:draw()
 	if self.image.current ~= self.image.down then
 		love.graphics.draw(self.image.current, self.pos.x, self.pos.y)
 	end
-
 end
 
 function Player:onQuit()

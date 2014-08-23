@@ -19,6 +19,7 @@ function Fortress:initialize(id)
 	self.pos.r = Tileset.TILESIZE * 6
 
 	self.box = {x = self.pos.x-192/3, y = self.pos.y-192/3, w = 192/3*2, h = 192/3*2}
+	self.boxFull = {x = self.pos.x-192/2, y = self.pos.y-192/2, w = 198, h = 198}
 
 	self.soldat = {}
 	self.ouvrier = 0

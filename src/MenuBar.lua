@@ -73,6 +73,7 @@ function MenuBar:draw()
 	love.graphics.line(self.center.x, self.center.y, self.center.x - self.v.x, self.center.y - self.v.y)
 
 	self:drawLifeBar()
+	self:drawRessourcePlayer()
 
 	love.graphics.setColor(255,255,255)
 	love.graphics.rectangle("line", WINDOW_WIDTH/2 -200, 40, 140, 30)
@@ -106,6 +107,12 @@ function MenuBar:drawLifeBar()
 	love.graphics.rectangle("line", WINDOW_WIDTH/2 - 15, (WINDOW_HEIGHT-self.w)/6 + self.w, 30, (WINDOW_HEIGHT-self.w)/3*2)
 	love.graphics.setColor(159,36,36)
 	love.graphics.rectangle("fill", WINDOW_WIDTH/2 - 12, (WINDOW_HEIGHT-self.w)/6 + self.w + 3, 24, ((WINDOW_HEIGHT-self.w)/3*2 - 6) * engine.screen.player.life/engine.screen.player.maxLife)
+end
+
+function MenuBar:drawRessourcePlayer()
+	love.graphics.setColor(255,255,255)
+	love.graphics.printf("W : " .. engine.screen.player.bois .." S : ".. engine.screen.player.pierre.." M : " .. engine.screen.player.nourriture, 10, 100, 100)
+	love.graphics.printf("W : " .. engine.screen.player.playerDark.bois .." S : ".. engine.screen.player.playerDark.pierre.." M : " .. engine.screen.player.playerDark.nourriture, 110 + WINDOW_WIDTH/2, 100, 100)
 end
 
 function MenuBar:onQuit()

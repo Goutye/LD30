@@ -37,7 +37,7 @@ end
 --VECTOR
 
 function Engine:vector_normalize(v)
-	local l = self:vector_Length(v)
+	local l = self:vector_length(v)
 	v.x = v.x / l
 	v.y = v.y / l
 
@@ -69,6 +69,14 @@ function Engine:vector_copy(v)
 	return r
 end
 
+function Engine:vector_getAngle(v)
+	local angle = math.acos(v.y)
+	if v.x > 0 then
+		angle = -angle
+	end
+	return angle + math.pi
+end
+
 --AABB
 function Engine:AABB_circle(box, circle, boolReturnPos)
 	local pos = {}
@@ -97,22 +105,8 @@ end
 
 function Engine:AABB_inCircle(box, circle, boolReturnPos)
 	local pos = {}
-	pos.x = circle.pos.x
-	pos.y = circle.pos.y
-
-	if pos.x > box.x + box.w - 1 then
-		pos.x = box.x + box.w - 1
-	elseif pos.x < box.x then
-		pos.x = box.x
-	end
-	if pos.y > box.y + box.h - 1 then
-		pos.y = box.y + box.h - 1
-	elseif pos.y < box.y then
-		pos.y = box.y
-	end
-
 	
-	local collision = self:Circle_point(circle, pos)
+	local collision = true
 	local pos = {}
 	pos[0] = {x = box.x, y = box.y}
 	pos[1] = {x = box.x + box.w-1, y = box.y}

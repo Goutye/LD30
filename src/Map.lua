@@ -100,6 +100,8 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 
 	if(night > 0){
 		pixel.rgb *= vec3(0.2,0.2,0.2);
+	}else{
+
 	}
 
 	return pixel;
@@ -117,10 +119,10 @@ end
 
 function Map:draw()
 	local pos = {}
-	pos.x = engine.screen.entities[self.id].pos.x
-	pos.y = engine.screen.entities[self.id].pos.y
+	pos.x = engine.screen.entities[self.id][1].pos.x
+	pos.y = engine.screen.entities[self.id][1].pos.y
 
-	local size = engine.screen.entities[self.id].size
+	local size = engine.screen.entities[self.id][1].size
 	local menuH = engine.screen.menuBar.h
 
 	local posTile = {}

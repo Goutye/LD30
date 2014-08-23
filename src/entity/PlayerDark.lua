@@ -7,6 +7,22 @@ function PlayerDark:initialize(x,y)
 	self.life = 10
 	self.lvl = 1
 	self.size = 32
+	self.id = 2
+
+	self.exp = 0
+	self.expNextLvl = 10
+
+	self.image = {}
+	self.image.up = love.graphics.newImage("assets/sprites/player2.png")
+	self.image.down = love.graphics.newImage("assets/sprites/player2F.png")
+	self.image.left = love.graphics.newImage("assets/sprites/player2L.png")
+	self.image.right = love.graphics.newImage("assets/sprites/player2R.png")
+	self.image.current = self.image.up
+
+	self.sword = love.graphics.newImage("assets/sprites/hache.png")
+	self.swordTime = 0
+	self.swordAnimation = false
+	self.swordTimeAnimation = 0.25
 
 	self.pos = {}
 	self.pos.x = x
@@ -15,22 +31,53 @@ function PlayerDark:initialize(x,y)
 	self.spd.x = 0
 	self.spd.y = 0
 
+	self.dir = {}
+	self.dir.x = 1
+	self.dir.y = 0
+
 	self.pierre = 0
 	self.bois = 0
 	self.nourriture = 0
 end
 
 function PlayerDark:update(dt)
+	if self.swordAnimation then
+		self.swordTime = self.swordTime + dt
+		if self.swordTime >= self.swordTimeAnimation then
+			self.swordAnimation = false
+			self.swordTime = 0
+		end
+	end
+
+	if self.dir.x > 0.5 then
+		self.image.current = self.image.right
+	elseif self.dir.x < -0.5 then
+		self.image.current = self.image.left
+	elseif self.dir.y > 0.5 then
+		self.image.current = self.image.down
+	elseif self.dir.y < -0.5 then
+		self.image.current = self.image.up
+	end
 end
 
 function PlayerDark:draw()
-	love.graphics.setColor(255,0,255)
 	local menuH = engine.screen.menuBar.h
 
 	love.graphics.push()
 	love.graphics.translate(-self.pos.x +math.floor(3*WINDOW_WIDTH/4) - self.size/2, -self.pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - self.size/2)
-	love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.size, self.size)
-	love.graphics.pop()
+	
+	if self.image.current == self.image.down then
+		love.graphics.draw(self.image.current, self.pos.x, self.pos.y)
+	end
+
+	if self.swordAnimation then
+		local angle = engine:vector_getAngle(self.dir)
+		love.graphics.draw(self.sword, self.pos.x + self.size/2, self.pos.y + self.size/2, angle, 1, 1, self.sword:getWidth()/2, self.sword:getHeight()-2)
+	end
+
+	if self.image.current ~= self.image.down then
+		love.graphics.draw(self.image.current, self.pos.x, self.pos.y)
+	end
 end
 
 function PlayerDark:onQuit()
@@ -93,6 +140,11 @@ function PlayerDark:tryMove()
 	end
 
 	return x,y
+end
+
+function PlayerDark:getBox()
+	local box = {x = self.pos.x, y = self.pos.y, h = self.size, w = self.size}
+	return box
 end
 
 return PlayerDark

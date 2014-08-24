@@ -12,9 +12,15 @@ local Soldat = require 'entity.Soldat'
 Fortress.static.TIMEEXPANSION = 20
 
 function Fortress:initialize(id, mode, difficulty)
-	self.maxLife = 3000 * (3-difficulty)
+	if mode ~= nil then
+		self.maxLife = 10000
+	else
+		self.maxLife = 3000 * (3-difficulty)
+	end
 	self.life = self.maxLife
 	self.id = id
+
+	self.mode = mode ~= nil
 
 	self.image = {}
 	self.image.farmer = love.graphics.newImage("assets/icon/farmer.png")
@@ -45,11 +51,13 @@ function Fortress:initialize(id, mode, difficulty)
 	if mode ~= nil then
 		for i = 1,31 do
 			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
 			table.insert(self.mineur, Mineur:new(self))
 			table.insert(self.mineur, Mineur:new(self))
 			table.insert(self.bucheron, Bucheron:new(self))
 			table.insert(self.bucheron, Bucheron:new(self))
 			self.habitant = 280
+			self.soldat = 100
 		end
 	else
 		if difficulty == 0 then

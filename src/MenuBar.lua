@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 local MenuBar = class('MenuBar')
 
-function MenuBar:initialize()
+function MenuBar:initialize(mode)
 	self.image = love.graphics.newImage("assets/wood.png")
 	self.w = 100
 	self.h = 80
@@ -17,8 +17,8 @@ function MenuBar:initialize()
 	self.v.y = -40
 
 	self.currentAuto = {}
-	self.currentAuto[1] = 3
-	self.currentAuto[2] = 3
+	self.currentAuto[1] = 0
+	self.currentAuto[2] = 0
 
 	self.night = 1
 
@@ -26,11 +26,15 @@ function MenuBar:initialize()
 	self.checkDay[1] = false
 	self.checkDay[2] = false
 
-	self.autoOK = false
+	self.autoOK = mode ~=nil
 end
 
 function MenuBar:update(dt)
-	self.hour = (self.hour + dt) % 24
+	if engine.screen.mode then
+		self.hour = (self.hour + dt * (2+engine.screen.difficulty)/2) % 24
+	else
+		self.hour = (self.hour + dt) % 24
+	end
 	self.v.x = 0
 	self.v.y = -40
 	self.v = engine:vector_rotate(self.v, self.hour/12 *math.pi) -- /24 * 2 => /12
@@ -98,7 +102,7 @@ function MenuBar:draw()
 	self:drawRessourcePlayer()
 
 
-	if self.autoOK then
+	if false then --self.autoOK then
 		love.graphics.setColor(255,255,255)
 		love.graphics.rectangle("line", WINDOW_WIDTH/2 -200, 40, 140, 30)
 		love.graphics.rectangle("line", WINDOW_WIDTH -150, 40, 140, 30)
@@ -136,7 +140,7 @@ function MenuBar:drawLifeBar()
 end
 
 function MenuBar:drawRessourcePlayer()
-	if self.autoOK then
+	if false then --self.autoOK then
 		love.graphics.setColor(255,255,255)
 		love.graphics.printf("W : " .. engine.screen.player.bois .." S : ".. engine.screen.player.pierre.." M : " .. engine.screen.player.nourriture, 10, 100, 100)
 		love.graphics.printf("W : " .. engine.screen.player.playerDark.bois .." S : ".. engine.screen.player.playerDark.pierre.." M : " .. engine.screen.player.playerDark.nourriture, 110 + WINDOW_WIDTH/2, 100, 100)

@@ -10,6 +10,7 @@ function Engine:initialize(screen)
 	self.font = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 14)
 	self.font2 = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 60)
 	self.font3 = love.graphics.newFont("assets/font/visitor2.ttf", 18)
+	self.font4 = love.graphics.newFont("assets/font/FORCED_SQUARE.ttf", 32)
 
 	self.TILESIZE = 64
 	self.TIMEFORONEDAY = 24

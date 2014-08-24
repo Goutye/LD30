@@ -44,7 +44,12 @@ function King:update(dt)
 				self.dayBeforeNextWave = love.math.random(1, 3)
 			end
 		elseif self.day >= self.dayBeforeNextWave and self.fortress.soldat >= 10 then
-			local rand = love.math.random(33, 66)
+			local rand = 0
+			if self.mode then
+				rand = love.math.random(50, 100)
+			else
+				rand = love.math.random(33, 66)
+			end
 			self.nbSoldiers = math.floor(self.fortress.soldat * rand/100)
 			self.fortress.soldat = self.fortress.soldat - self.nbSoldiers
 			self.inTravel = true
@@ -91,7 +96,9 @@ function King:draw()
 			
 			engine.screen.player:drawInfo()
 			engine.screen.player.playerDark:drawInfo()
-			engine.screen.entities[self.idWorld][2]:drawInfo()
+			if self.mode then
+				engine.screen.entities[self.idWorld][2]:drawInfo()
+			end
 		end
 
 		love.graphics.setColor(255,255,255)

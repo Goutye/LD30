@@ -49,7 +49,7 @@ function GameScreen:initialize(difficulty, mode)
 	self.map[1] = Map:new(1)
 	self.map[2] = Map:new(2)
 
-	self.menuBar = MenuBar:new()
+	self.menuBar = MenuBar:new(mode)
 
 	--King
 

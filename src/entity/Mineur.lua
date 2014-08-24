@@ -16,7 +16,10 @@ function Mineur:update(dt)
 	self.totalTime = self.totalTime + dt
 	if self.time > Mineur.TIMETOHARVEST then
 		self.time = self.time - Mineur.TIMETOHARVEST
-		self.fortress.pierre = self.fortress.pierre + 1
+
+		if self.fortress.pierre < 100 then
+			self.fortress.pierre = math.floor(self.fortress.pierre + 1)
+		end
 	end
 end
 

@@ -27,7 +27,7 @@ function Tower:initialize(x,y,idWorld,dmg)
 
 	self.fire = false
 	self.fireTime = 0
-	self.fireTimeNext = 2
+	self.fireTimeNext = 1
 
 	engine:addLight(engine:vector_copy(self.pos))
 end
@@ -37,6 +37,7 @@ function Tower:update(dt)
 		self.fireTime = self.fireTime + dt
 		if self.fireTime >= self.fireTimeNext then
 			self.fire = false
+			self.fireTime = 0
 		end
 		return
 	else

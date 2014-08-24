@@ -81,6 +81,11 @@ function PlayerDark:draw()
 	end
 end
 
+function PlayerDark:drawInfo()
+	love.graphics.setColor(255,255,255)
+	love.graphics.printf("Lvl : ".. self.lvl .."\tExp : " .. math.floor(self.exp).."/"..math.floor(self.expNextLvl), 10 + WINDOW_WIDTH/2 + 50, WINDOW_HEIGHT - 90, WINDOW_WIDTH/2 - 50, "center")
+end
+
 function PlayerDark:onQuit()
 end
 

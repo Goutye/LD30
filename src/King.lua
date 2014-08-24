@@ -8,17 +8,25 @@ King.static.TIMEENDTRAVEL = 20
 
 function King:initialize(idWorld, fortress)
 	self.idWorld = idWorld
+	self.idOtherWorld = idWorld - 1
+
+	if self.idOtherWorld == 0 then
+		self.idOtherWorld = 2
+	end
+
 	self.fortress = fortress
 	self.portalDiscovered = false
 
 	self.day = 0
-	self.dayBeforeNextWave = love.math.random(2,4)
+	self.dayBeforeNextWave = love.math.random(1,3)
 
 	self.inTravel = false
 	self.nbSoldiers = 0
 	self.timeTravel = 0
 
-	self.menu = false
+	self.checkNewTravel = false
+
+	self.menu = true
 end
 
 function King:update(dt)
@@ -32,7 +40,7 @@ function King:update(dt)
 				self.nbSoldiers = 0
 				self.inTravel = false
 				self.timeTravel = 0
-				self.dayBeforeNextWave = love.math.random(5, 10)
+				self.dayBeforeNextWave = love.math.random(1, 3)
 			end
 		elseif self.day >= self.dayBeforeNextWave and self.fortress.soldat >= 10 then
 			local rand = love.math.random(33, 66)
@@ -41,13 +49,22 @@ function King:update(dt)
 			self.inTravel = true
 
 			engine.screen:addEntityPassiv(Popup:new("A L'ASSAULT ! " .. self.nbSoldiers .. " are in the road!", 3,self.idWorld))
-		end
-	
-		if keyboard:isPressed("tab") then
-			self.menu = not self.menu
+		elseif engine.screen.king[self.idOtherWorld].inTravel then
+			if love.math.random(1,4) == 1 and not self.checkNewTravel then
+				self.day = self.dayBeforeNextWave
+			else
+				self.day = self.dayBeforeNextWave - 1
+			end
+			self.checkNewTravel = true
+		else
+			self.checkNewTravel = false
 		end
 	else
 		self.day = 0
+	end
+
+	if keyboard:isPressed("tab") then
+		self.menu = not self.menu
 	end
 end
 
@@ -69,7 +86,10 @@ function King:draw()
 			love.graphics.printf(self.nbSoldiers, 10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1) +(WINDOW_WIDTH/2-50-90) * ((self.idWorld - 1) * (1-self.timeTravel/King.TIMEENDTRAVEL) + (self.idWorld - 2) * -self.timeTravel/King.TIMEENDTRAVEL), WINDOW_HEIGHT - 70, 80, "center")
 		else
 			love.graphics.setColor(255,255,255)
-			love.graphics.printf("The king thinks about a machiavellian plan...", (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1), WINDOW_HEIGHT - 60, WINDOW_WIDTH/2 - 50, "center")
+			love.graphics.printf("The king thinks about a machiavellian plan...",10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1), WINDOW_HEIGHT - 60, WINDOW_WIDTH/2 - 50, "center")
+			
+			engine.screen.player:drawInfo()
+			engine.screen.player.playerDark:drawInfo()
 		end
 
 		love.graphics.setColor(255,255,255)
@@ -84,7 +104,7 @@ function King:getGroupInTravel()
 		self.inTravel = false
 		self.nbSoldiers = 0
 		self.timeTravel = 0
-		self.dayBeforeNextWave = love.math.random(5, 10)
+		self.dayBeforeNextWave = love.math.random(1, 3)
 		return nb, penality
 	else
 		return 0, 0

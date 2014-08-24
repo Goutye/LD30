@@ -16,7 +16,10 @@ function Bucheron:update(dt)
 	self.totalTime = self.totalTime + dt
 	if self.time > Bucheron.TIMETOHARVEST then
 		self.time = self.time - Bucheron.TIMETOHARVEST
-		self.fortress.bois = self.fortress.bois + 1
+
+		if self.fortress.bois < 100 then
+			self.fortress.bois = math.floor(self.fortress.bois + 1)
+		end
 	end
 end
 

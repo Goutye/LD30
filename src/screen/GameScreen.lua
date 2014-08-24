@@ -68,9 +68,9 @@ end
 
 function GameScreen:update(dt)
 	--CHEAT
-	if mouse:isReleased("r") then
-		engine:screen_setNext(EndScreen:new(self))
-	end
+	--if mouse:isReleased("r") then
+	--	engine:screen_setNext(EndScreen:new(self))
+	--end
 
 
 	if keyboard:isPressed("e") and not self.menuIsActiv then
@@ -203,7 +203,7 @@ function GameScreen:generateNightMob(idWorld, time)
 		self.randomCurrentWorld = idWorld
 		self.randomNbMob = 0
 	end
-	local nbMobMax = 1 + math.floor(self.fortress[idWorld].habitant / 5) -- 1 mob par 5 habs
+	local nbMobMax = 1+ math.log10(self.fortress[idWorld].habitant) -- 1 mob par 5 habs
 	local nbMob = love.math.random(1, nbMobMax)
 	local timeNext = 12/nbMob * self.randomNbMob
 

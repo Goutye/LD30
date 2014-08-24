@@ -8,7 +8,7 @@ function Troup:initialize(idWorld, x, y, nb)
 	self.idWorld = idWorld
 	self.lvl = nb
 	self.friendly = false
-	self.exp = nb
+	self.exp = math.floor(nb / 2)
 	self.life = self.lvl * 20
 	self.maxLife = self.life
 
@@ -20,7 +20,7 @@ function Troup:initialize(idWorld, x, y, nb)
 
 	self.dir = {}
 
-	local center = {x = engine.screen.fortress[idWorld].pos.x - 92, y = engine.screen.fortress[idWorld].pos.y - 92}
+	local center = {x = engine.screen.fortress[idWorld].pos.x, y = engine.screen.fortress[idWorld].pos.y}
 	self.dir.x = center.x - self.pos.x
 	self.dir.y = center.y - self.pos.y
 	self.dir = engine:vector_normalize(self.dir)
@@ -71,6 +71,11 @@ end
 
 function Troup:hit(dmg)
 	self.life = self.life - dmg
+
+	if math.floor(self.life / 20) + 1 < self.lvl then
+		self.lvl = 1 + math.floor(self.life / 20)
+	end
+
 	if self.life <= 0 then
 		self.life = 0
 		engine.screen:removeEntity(self.idWorld, self.id)

@@ -82,7 +82,7 @@ function EndScreen:draw()
 
 	--Monster
 	love.graphics.draw(self.bat, 20, 300)
-	love.graphics.print("Number of Kill : " .. self.GS.nbEnemyDead .."\nLvL Bat : " .. (1+math.log10(1+self.GS.nbEnemyDead)), 100, 310)
+	love.graphics.print("Number of Kill : " .. self.GS.nbEnemyDead .."\nLvL Bat : " ..  math.floor(1+math.log10(1+self.GS.nbEnemyDead)), 100, 310)
 
 	love.graphics.draw(self.troup, 20, 380)
 	love.graphics.print("Bodies passed the portal : " .. self.GS.entities[1][2].nbBodyPassed, 100, 390)
@@ -93,10 +93,11 @@ function EndScreen:draw()
 	love.graphics.print("Farmer :     \t" .. #f1.agriculteur .. "\t" .. #f2.agriculteur, 260, 490)
 	love.graphics.print("Lumberjack : \t" .. #f1.bucheron .. "\t" .. #f2.bucheron, 260, 510)
 	love.graphics.print("Miner :      \t" .. #f1.mineur .. "\t" .. #f2.mineur, 260, 530)
-	love.graphics.print("Inhabitants :\t".. f1.habitant .. "\t" .. f2.habitant, 450, 490)
-	love.graphics.print("Stone :      \t".. f1.pierre .. "\t" .. f2.pierre, 450, 510)
-	love.graphics.print("Wood :       \t".. f1.bois .. "\t" .. f2.bois, 450, 530)
+	love.graphics.print("Inhabitants :\t".. f1.habitant .. "\t" .. f2.habitant, 500, 490)
+	love.graphics.print("Stone :      \t".. f1.pierre .. "\t" .. f2.pierre, 500, 510)
+	love.graphics.print("Wood :       \t".. f1.bois .. "\t" .. f2.bois, 500, 530)
 
+	love.graphics.setColor(255,255,255)
 end
 
 function EndScreen:onQuit()

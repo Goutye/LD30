@@ -45,8 +45,9 @@ function Menu:update(dt)
 			self.firstChoice = (self.firstChoice + 1) % 2
 		end
 	end
-	if keyboard:isPressed("escape") or keyboard:isPressed("backspace") then
+	if keyboard:isPressed("escape") or keyboard:isPressed("backspace") or keyboard:isPressed("3") then
 		engine.screen.menuIsActiv = false
+		self.firstCheck = false
 	elseif keyboard:isPressed("e") then
 		if not self.firstCheck then
 			self.firstCheck = true
@@ -80,13 +81,13 @@ function Menu:update(dt)
 				end
 				--Fortress 2
 				if self.choice[self.firstChoice] == 0 then
-					fortress2.bois = 0
+					fortress2.bois = math.floor(fortress2.bois/2)
 					self.endSentence = self.endSentence .. "Farewell, woods!\n"
 				elseif self.choice[self.firstChoice] == 1 then
 					fortress2.ouvrier = 0
 					self.endSentence = self.endSentence .. "Farewell, free workers!\n"
 				else
-					fortress2.pierre = 0
+					fortress2.pierre = math.floor(fortress2.pierre/2)
 					self.endSentence = self.endSentence .. "Farewell, stones!\n"
 				end
 				
@@ -94,13 +95,13 @@ function Menu:update(dt)
 			else
 				--Fortress 1
 				if self.choice[self.firstChoice] == 0 then
-					fortress1.bois = 0
+					fortress1.bois = math.floor(fortress1.bois /2)
 					self.endSentence = self.endSentence .. "Farewell, woods!\n"
 				elseif self.choice[self.firstChoice] == 1 then
 					fortress1.ouvrier = 0
 					self.endSentence = self.endSentence .. "Farewell, free workers!\n"
 				else
-					fortress1.pierre = 0
+					fortress1.pierre = math.floor(fortress1.pierre /2)
 					self.endSentence = self.endSentence .. "Farewell, stones!\n"
 				end
 				--Fortress 2
@@ -146,19 +147,19 @@ function Menu:draw()
 	love.graphics.rectangle("fill", WINDOW_WIDTH - 110, WINDOW_HEIGHT/3*2, 100, 120)
 
 	if self.firstCheck then
-		love.graphics.rectangle("fill", 115, WINDOW_HEIGHT/3*2 + 10, 100, 180)
-		love.graphics.rectangle("fill", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 10, 100, 180)
+		love.graphics.rectangle("fill", 115, WINDOW_HEIGHT/3*2 + 10, 200, 180)
+		love.graphics.rectangle("fill", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 10, 200, 180)
 
 		--curseur
 		love.graphics.setColor(100,100,100)
-		love.graphics.rectangle("fill", 115, WINDOW_HEIGHT/3*2 + 10 + 60*self.choice[self.firstChoice], 100, 60)
-		love.graphics.rectangle("fill", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 10 + 60*self.choice[self.firstChoice], 100, 60)
+		love.graphics.rectangle("fill", 115, WINDOW_HEIGHT/3*2 + 10 + 60*self.choice[self.firstChoice], 200, 60)
+		love.graphics.rectangle("fill", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 10 + 60*self.choice[self.firstChoice], 200, 60)
 
 		love.graphics.setColor(0,0,0)
 		if self.firstChoice == 0 then
-			love.graphics.printf("Tower 1 dmg", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("Tower 2 dmg", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("Tower 3 dmg", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
+			love.graphics.printf("Tower 1 dmg - Stn 5 Wd 10", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
+			love.graphics.printf("Tower 2 dmg - Stn 20 Wd 15", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
+			love.graphics.printf("Tower 3 dmg - Stn 60 Wd 30", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
 
 			love.graphics.printf("Throw wood?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
 			love.graphics.printf("Throw workers?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
@@ -168,9 +169,9 @@ function Menu:draw()
 			love.graphics.printf("Throw workers?", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
 			love.graphics.printf("Throw stone?", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
 
-			love.graphics.printf("Cannon 1 dmg", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("Cannon 2 dmg", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("Cannon 3 dmg", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 100, "center")			
+			love.graphics.printf("Cannon 1 dmg - Stn 10 Wd 5", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
+			love.graphics.printf("Cannon 2 dmg - Stn 15 Wd 20", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
+			love.graphics.printf("Cannon 3 dmg - Stn 50 Wd 40", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 100, "center")			
 			
 		end
 	end

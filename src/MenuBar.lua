@@ -26,7 +26,7 @@ function MenuBar:initialize()
 	self.checkDay[1] = false
 	self.checkDay[2] = false
 
-	self.autoOK = true
+	self.autoOK = false
 end
 
 function MenuBar:update(dt)

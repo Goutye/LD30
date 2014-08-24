@@ -27,7 +27,7 @@ function Canon:initialize(x,y,idWorld, dmg)
 
 	self.fire = false
 	self.fireTime = 0
-	self.fireTimeNext = 2
+	self.fireTimeNext = 1
 end
 
 function Canon:update(dt)
@@ -35,6 +35,7 @@ function Canon:update(dt)
 		self.fireTime = self.fireTime + dt
 		if self.fireTime >= self.fireTimeNext then
 			self.fire = false
+			self.fireTime = 0
 		end
 	else
 		for i,e in ipairs(engine.screen.entities[self.idWorld]) do

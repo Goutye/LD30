@@ -28,12 +28,17 @@ function Portal:initialize(idWorld)
 	self:changeLocation()
 
 	self.nbBodyPassed = 0
-	self.LIMITFORDESTROY = 50
+	self.LIMITFORDESTROY = 300
+	self.sentenceCheck = false
 end
 
 function Portal:update(dt)
 	if self.nbBodyPassed > self.LIMITFORDESTROY then
 		self.friendly = false
+		if not self.sentenceCheck then
+			engine.screen:addEntityPassiv(Popup("Hey little dove ! Our troup just said that the portal can be hit!", 5))
+			self.sentenceCheck = true
+		end
 	end
 end
 

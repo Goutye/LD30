@@ -37,6 +37,7 @@ function IEntity:giveExp(exp)
 	self.exp = self.exp + exp
 	if self.exp >= self.expNextLvl then
 		self.lvl = self.lvl + 1
+		self.life = self.maxLife
 		self.exp = self.exp - self.expNextLvl
 		self.expNextLvl = self.expNextLvl + math.log(self.expNextLvl)
 	end 

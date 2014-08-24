@@ -46,6 +46,9 @@ function Player:initialize(x,y)
 	self.immortal = false
 	self.timeImmortal = 1
 	self.time = 0
+
+	self.timeWithoutHit = 0
+	self.timeMaxHit = 10
 end
 
 function Player:update(dt)
@@ -54,6 +57,19 @@ function Player:update(dt)
 		if self.swordTime >= self.swordTimeAnimation then
 			self.swordAnimation = false
 			self.swordTime = 0
+		end
+	end
+
+	if self.immortal then
+		self.timeWithoutHit = self.timeImmortal
+	end
+
+	self.timeWithoutHit = self.timeWithoutHit + dt
+	if self.timeWithoutHit > self.timeMaxHit then
+		self.timeWithoutHit = 0
+		self.life = self.life + 1
+		if self.life > self.maxLife then
+			self.life = self.maxLife
 		end
 	end
 
@@ -172,6 +188,11 @@ function Player:draw()
 	end
 end
 
+function Player:drawInfo()
+	love.graphics.setColor(255,255,255)
+	love.graphics.printf("Lvl : ".. self.lvl .."\tExp : " .. math.floor(self.exp).."/"..math.floor(self.expNextLvl), 10, WINDOW_HEIGHT - 90, WINDOW_WIDTH/2 - 50, "center")
+end
+
 function Player:onQuit()
 end
 
@@ -250,8 +271,8 @@ end
 function Player:getBoxWeapon()
 	local v = self.dir
 	local box = {}
-	v.x = v.x * 50
-	v.y = v.y * 50
+	v.x = v.x * 70
+	v.y = v.y * 70
 
 	if v.x < 0 then
 		box.x = self.pos.x + v.x
@@ -278,11 +299,11 @@ function Player:getBoxWeapon()
 
 	if box.h < 4 then
 		box.y = box.y -3
-		box.h = 10
+		box.h = 20
 	end
 	if box.w < 4 then
 		box.x = box.x - 3
-		box.w = 10
+		box.w = 20
 	end
 	return box
 end

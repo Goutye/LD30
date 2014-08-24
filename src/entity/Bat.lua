@@ -5,10 +5,10 @@ local IEntity = require 'entity.IEntity'
 local Bat = class('Bat', IEntity)
 
 function Bat:initialize(x,y,idWorld)
-	self.lvl = 1 + math.floor(math.log10(1 + engine.screen.nbEnemyDead))
+	self.lvl = 1 + math.floor(engine.screen.nbEnemyDead/20)
 	self.life = 10 * self.lvl
 	self.maxLife = 10 * self.lvl
-	self.exp = 2
+	self.exp = 2 * self.lvl
 	self.pos = {}
 	self.pos.x = x * Tileset.TILESIZE
 	self.pos.y = y * Tileset.TILESIZE
@@ -21,7 +21,7 @@ function Bat:initialize(x,y,idWorld)
 
 	self.image = love.graphics.newImage("assets/sprites/Bat.png")
 
-	local center = {x = engine.screen.fortress[idWorld].pos.x - 92, y = engine.screen.fortress[idWorld].pos.y - 92}
+	local center = {x = engine.screen.fortress[idWorld].pos.x, y = engine.screen.fortress[idWorld].pos.y}
 	self.dir.x = center.x - self.pos.x
 	self.dir.y = center.y - self.pos.y
 	self.dir = engine:vector_normalize(self.dir)

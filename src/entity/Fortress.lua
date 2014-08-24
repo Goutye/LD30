@@ -9,9 +9,11 @@ local Bucheron = require 'entity.Bucheron'
 local Agriculteur = require 'entity.Agriculteur'
 local Soldat = require 'entity.Soldat'
 
+Fortress.static.TIMEEXPANSION = 20
+
 function Fortress:initialize(id)
-	self.life = 20000
-	self.maxLife = 20000
+	self.life = 5000
+	self.maxLife = 5000
 	self.id = id
 
 	self.image = {}
@@ -35,23 +37,42 @@ function Fortress:initialize(id)
 
 	self.bois = 0
 	self.pierre = 0
-	self.habitant = 3 -- Player + Le roi + Agriculteur
+	self.habitant = 7 -- Player + Le roi + Agriculteur
 
 	self.endSentence = ""
 	self.popupSet = false
 
+	--for i = 1,28 do
+		--table.insert(self.agriculteur, Agriculteur:new(self))
+		--table.insert(self.mineur, Mineur:new(self))
+		--table.insert(self.bucheron, Bucheron:new(self))
+	--end
 	table.insert(self.agriculteur, Agriculteur:new(self))
 	table.insert(self.agriculteur, Agriculteur:new(self))
 	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
+	table.insert(self.mineur, Mineur:new(self))
+	table.insert(self.bucheron, Bucheron:new(self))
+	
 
+	self.timeWithoutExpansion = 0
+	self.predHabitant = 0
+
+	self.timeBeforeWorker = 10
+	self.timeWorker = 0
 end
 
 function Fortress:update(dt)
+	self.timeWorker = self.timeWorker + dt
+	if self.timeWorker > self.timeBeforeWorker then
+		if (self.habitant > self.ouvrier + #self.agriculteur + #self.mineur + #self.bucheron + self.soldat + 2) then 
+			if self.ouvrier < 5 then
+				self.ouvrier = self.ouvrier + 1
+			end
+		end
+		self.timeWorker = 0
+	end
+
+
 	if mouse:isPressed("l") then
 		local x,y = mouse:wherePressed("l")
 		local pos = {x = x, y=y}
@@ -183,13 +204,31 @@ function Fortress:update(dt)
 	end
 
 	--Elargissement
-	self.pos.r = 500 + (5 + (math.sqrt(self.habitant*2) + math.log(self.habitant * 2))/2 ) * Tileset.TILESIZE
+	local r = (5 + (math.sqrt(self.habitant*2) + math.log(self.habitant * 2))/2 ) * Tileset.TILESIZE*3
+	if r > self.pos.r then 
+		self.pos.r = r
+	end
 	if self.pos.r > 62*Tileset.TILESIZE and not self.popupSet then
 		self.popupSet = true
 		engine.screen:addEntityPassiv(Popup:new("Hey slave! We just discovered a Portal! Maybe this is the reason of this attack!", 5, self.id))
 		engine.screen.king[self.id].portalDiscovered = true
 	end
 	
+
+
+	if self.habitant == self.predHabitant and self.ouvrier == 0 then
+		self.timeWithoutExpansion = self.timeWithoutExpansion + dt
+		if self.timeWithoutExpansion > Fortress.TIMEEXPANSION then
+			self.timeWithoutExpansion = 0
+			self.ouvrier = self.ouvrier + 1
+			if self.soldat > 0 then
+				self.soldat = self.soldat - 1
+			end
+			self.habitant = self.habitant - 10
+		end
+	end
+
+	self.predHabitant = self.habitant
 
 	engine.screen.map[self.id].shader1:send("r", self.pos.r)
 	engine.screen.map[self.id].shader2:send("r", self.pos.r)

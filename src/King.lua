@@ -6,9 +6,10 @@ local Popup = require 'Popup'
 
 King.static.TIMEENDTRAVEL = 20
 
-function King:initialize(idWorld, fortress)
+function King:initialize(idWorld, fortress, mode)
 	self.idWorld = idWorld
 	self.idOtherWorld = idWorld - 1
+	self.mode = mode ~=nil
 
 	if self.idOtherWorld == 0 then
 		self.idOtherWorld = 2
@@ -90,6 +91,7 @@ function King:draw()
 			
 			engine.screen.player:drawInfo()
 			engine.screen.player.playerDark:drawInfo()
+			engine.screen.entities[self.idWorld][2]:drawInfo()
 		end
 
 		love.graphics.setColor(255,255,255)

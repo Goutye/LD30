@@ -5,14 +5,17 @@ local IEntity = require 'entity.IEntity'
 local Portal = class('Portal', IEntity)
 local Popup = require 'Popup'
 
-function Portal:initialize(idWorld)
+function Portal:initialize(idWorld, mode, difficulty)
 	self.id = nil
 	self.idWorld = idWorld
 
+	self.mode = mode ~= nil
+
 	self.friendly = true
 	self.exp = 0
-	self.life = 1000
-	self.maxLife = 1000
+	
+	self.maxLife = 500 * (3-difficulty)
+	self.life = self.maxLife
 	self.lvl = 0
 
 	self.image = love.graphics.newImage("assets/Portal.png")
@@ -28,12 +31,21 @@ function Portal:initialize(idWorld)
 	self:changeLocation()
 
 	self.nbBodyPassed = 0
-	self.LIMITFORDESTROY = 300
+
+	if mode ~= nil then
+		self.LIMITFORDESTROY = 500 * (1+difficulty)
+	else
+		self.LIMITFORDESTROY = 150 * (1+difficulty)
+	end
 	self.sentenceCheck = false
 end
 
 function Portal:update(dt)
 	if self.nbBodyPassed > self.LIMITFORDESTROY then
+		if self.mode then
+			engine:screen_setNext(EndScreen:new(engine.screen))
+		end
+
 		self.friendly = false
 		if not self.sentenceCheck then
 			engine.screen:addEntityPassiv(Popup("Hey little dove ! Our troup just said that the portal can be hit!", 5))
@@ -47,8 +59,14 @@ function Portal:hit(dmg)
 	if self.life <= 0 then
 		self.life = 0
 
-		engine:screen_setNext(EndScreen:new(engine.screen))
+		if not self.mode then
+			engine:screen_setNext(EndScreen:new(engine.screen))
+		end
 	end
+end
+
+function Portal:drawInfo()
+	love.graphics.printf("Portal : "..self.nbBodyPassed.."/"..self.LIMITFORDESTROY, 10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1), WINDOW_HEIGHT - 30, WINDOW_WIDTH/2 - 50, "center")
 end
 
 function Portal:changeLocation()

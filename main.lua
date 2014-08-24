@@ -11,6 +11,7 @@ MenuScreen = require 'screen.MenuScreen'
 TitleScreen = require 'screen.TitleScreen'
 EndScreen = require 'screen.EndScreen'
 StoryScreen = require 'screen.StoryScreen'
+ModeScreen = require 'screen.ModeScreen'
 
 --LOCAL VARIABLE
 WINDOW_WIDTH = 1280

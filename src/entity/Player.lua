@@ -4,12 +4,14 @@ local IEntity = require 'entity.IEntity'
 local Player = class('Player', IEntity)
 local PlayerDark = require 'entity.PlayerDark'
 
-function Player:initialize(x,y)
-	self.maxLife = 100
-	self.life = 100
+function Player:initialize(x,y, difficulty)
+	self.maxLife = 100 * (3 - difficulty)
+	self.life = 100 * (3 - difficulty)
 	self.lvl = 1
 	self.size = 32
 	self.id = 1
+
+	self.difficulty = difficulty
 
 	self.image = {}
 	self.image.up = love.graphics.newImage("assets/sprites/player.png")
@@ -48,7 +50,7 @@ function Player:initialize(x,y)
 	self.time = 0
 
 	self.timeWithoutHit = 0
-	self.timeMaxHit = 10
+	self.timeMaxHit = 5 * (3 - self.difficulty)
 end
 
 function Player:update(dt)
@@ -67,7 +69,7 @@ function Player:update(dt)
 	self.timeWithoutHit = self.timeWithoutHit + dt
 	if self.timeWithoutHit > self.timeMaxHit then
 		self.timeWithoutHit = 0
-		self.life = self.life + 1
+		self.life = self.life + 1 * (3-self.difficulty)
 		if self.life > self.maxLife then
 			self.life = self.maxLife
 		end

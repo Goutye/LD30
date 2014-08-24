@@ -14,7 +14,10 @@ local Battlefield = require 'Battlefield'
 
 local Bat = require 'entity.Bat'
 
-function GameScreen:initialize()
+function GameScreen:initialize(difficulty, mode)
+	self.mode = mode ~=nil
+	self.difficulty = difficulty
+
 	self.building = {}
 	self.entities = {}
 	self.entities[1] = {}
@@ -22,21 +25,21 @@ function GameScreen:initialize()
 	self.entitiesPassiv = {}
 
 	self.fortress = {}
-	self.fortress[1] = Fortress:new(1)
-	self.fortress[2] = Fortress:new(2)
+	self.fortress[1] = Fortress:new(1, mode, difficulty)
+	self.fortress[2] = Fortress:new(2, mode, difficulty)
 
-	table.insert(self.entities[1], Player:new(self.fortress[1].pos.x, self.fortress[1].pos.y + 200))
+	table.insert(self.entities[1], Player:new(self.fortress[1].pos.x, self.fortress[1].pos.y + 200, difficulty))
 	self.player = self.entities[1][1]
 	self.player.id = 1
 	table.insert(self.entities[2], self.player.playerDark)
 	self.entities[2][1].id = 1
 
 	--Portal
-	table.insert(self.entities[1], Portal:new(1))
+	table.insert(self.entities[1], Portal:new(1, mode, difficulty))
 	self.portal = {}
 	self.portal[1] = self.entities[1][2]
 	self.portal[1].id = 2
-	table.insert(self.entities[2], Portal:new(2))
+	table.insert(self.entities[2], Portal:new(2, mode, difficulty))
 	self.entities[2][2].id = 2
 	self.portal[2] = self.entities[2][2]
 
@@ -51,8 +54,8 @@ function GameScreen:initialize()
 	--King
 
 	self.king = {}
-	self.king[1] = King:new(1,self.fortress[1])
-	self.king[2] = King:new(2,self.fortress[2])
+	self.king[1] = King:new(1,self.fortress[1], mode)
+	self.king[2] = King:new(2,self.fortress[2], mode)
 
 	self.battlefield = Battlefield:new(self.king)
 	--RandomMob
@@ -190,7 +193,7 @@ function GameScreen:fight(idWorld, id, box, dmg)
 			local box2 = {x = e.pos.x, y = e.pos.y, w = e.w, h = e.h}
 			if engine:AABB_AABB(box, box2) then
 				if e:hit(dmg) and id == 1 then --If Dead & player
-					self.entities[idWorld][1]:giveExp(e.exp)
+					self.entities[idWorld][1]:giveExp(e.exp * (3 - self.difficulty) /2)
 					self.entities[idWorld][1]:lootRandom(e.lvl, idWorld)
 				end
 			end
@@ -203,7 +206,7 @@ function GameScreen:generateNightMob(idWorld, time)
 		self.randomCurrentWorld = idWorld
 		self.randomNbMob = 0
 	end
-	local nbMobMax = 1+ math.log10(self.fortress[idWorld].habitant) -- 1 mob par 5 habs
+	local nbMobMax = 1+ math.log10(self.fortress[idWorld].habitant) * (1+self.difficulty) -- 1 mob par 5 habs
 	local nbMob = love.math.random(1, nbMobMax)
 	local timeNext = 12/nbMob * self.randomNbMob
 

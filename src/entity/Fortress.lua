@@ -11,9 +11,9 @@ local Soldat = require 'entity.Soldat'
 
 Fortress.static.TIMEEXPANSION = 20
 
-function Fortress:initialize(id)
-	self.life = 5000
-	self.maxLife = 5000
+function Fortress:initialize(id, mode, difficulty)
+	self.maxLife = 3000 * (3-difficulty)
+	self.life = self.maxLife
 	self.id = id
 
 	self.image = {}
@@ -42,16 +42,34 @@ function Fortress:initialize(id)
 	self.endSentence = ""
 	self.popupSet = false
 
-	--for i = 1,28 do
-		--table.insert(self.agriculteur, Agriculteur:new(self))
-		--table.insert(self.mineur, Mineur:new(self))
-		--table.insert(self.bucheron, Bucheron:new(self))
-	--end
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.agriculteur, Agriculteur:new(self))
-	table.insert(self.mineur, Mineur:new(self))
-	table.insert(self.bucheron, Bucheron:new(self))
+	if mode ~= nil then
+		for i = 1,31 do
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.mineur, Mineur:new(self))
+			table.insert(self.mineur, Mineur:new(self))
+			table.insert(self.bucheron, Bucheron:new(self))
+			table.insert(self.bucheron, Bucheron:new(self))
+			self.habitant = 280
+		end
+	else
+		if difficulty == 0 then
+			for i = 1, 8 do
+				table.insert(self.agriculteur, Agriculteur:new(self))
+				if i%2 == 0 then
+					table.insert(self.mineur, Mineur:new(self))
+					table.insert(self.bucheron, Bucheron:new(self))
+				end
+			end
+		elseif difficulty == 1 then
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.mineur, Mineur:new(self))
+			table.insert(self.bucheron, Bucheron:new(self))
+		else
+			table.insert(self.agriculteur, Agriculteur:new(self))
+		end
+	end
 	
 
 	self.timeWithoutExpansion = 0

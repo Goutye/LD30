@@ -3,7 +3,7 @@ local class = require 'middleclass'
 local TitleScreen = class('TitleScreen')
 
 function TitleScreen:initialize()
-	self.image = love.graphics.newImage("assets/screen/TitleScreen.png")
+	self.image = love.graphics.newImage("assets/screen/titlescreen.png")
 end
 
 function TitleScreen:update(dt)

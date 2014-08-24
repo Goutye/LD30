@@ -14,7 +14,7 @@ function StoryScreen:update(dt)
 		if self.current ~= self.sentence2 then
 			self.current = self.sentence2
 		else
-			engine:screen_setNext(GameScreen:new())
+			engine:screen_setNext(ModeScreen:new())
 		end
 	end
 end

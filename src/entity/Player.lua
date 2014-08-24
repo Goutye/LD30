@@ -57,19 +57,19 @@ function Player:update(dt)
 		end
 	end
 
-	if keyboard:isDown("up") then
+	if keyboard:isDown("up") or keyboard:isDown("z")  then
 		self.spd.y = self.spd.y * IEntity.FRICTION - dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.y = -1
-	elseif keyboard:isDown("down") then
+	elseif keyboard:isDown("down") or keyboard:isDown("s")  then
 		self.spd.y = self.spd.y * IEntity.FRICTION + dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.y = 1
 	else
 		self.spd.y = self.spd.y * IEntity.FRICTION
 	end
-	if keyboard:isDown("left") then
+	if keyboard:isDown("left") or keyboard:isDown("q") then
 		self.spd.x = self.spd.x * IEntity.FRICTION - dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.x = -1
-	elseif keyboard:isDown("right") then
+	elseif keyboard:isDown("right") or keyboard:isDown("d") then
 		self.spd.x = self.spd.x * IEntity.FRICTION + dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.x = 1
 	else
@@ -180,8 +180,8 @@ function Player:hit(dmg)
 		self.immortal = true
 		self.life = self.life - dmg
 		if self.life <= 0 then
-			--TODO ENDSCREEN
-		self.life = 0
+			engine:screen_setNext(EndScreen:new(engine.screen))
+			self.life = 0
 		end
 
 		self.playerDark.life = self.life

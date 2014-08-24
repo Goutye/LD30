@@ -1,0 +1,21 @@
+local class = require 'middleclass'
+
+local MenuScreen = class('MenuScreen')
+
+function MenuScreen:initialize()
+end
+
+function MenuScreen:update(dt)
+	if mouse:isReleased("l") then
+		engine:screen_setNext(GameScreen:new())
+	end
+end
+
+function MenuScreen:draw()
+
+end
+
+function MenuScreen:onQuit()
+end
+
+return MenuScreen

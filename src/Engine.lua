@@ -6,6 +6,11 @@ function Engine:initialize(screen)
 	self.screen = screen
 	self.nextScreen = nil
 
+	self.defaut = love.graphics.getFont()
+	self.font = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 14)
+	self.font2 = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 60)
+	self.font3 = love.graphics.newFont("assets/font/visitor2.ttf", 18)
+
 	self.TILESIZE = 64
 	self.TIMEFORONEDAY = 24
 
@@ -116,6 +121,21 @@ function Engine:draw()
 	love.graphics.setShader(self.tileShader);
 	love.graphics.draw(self.canvas)
 	love.graphics.setShader();
+end
+
+function Engine:printOutLine(text,x,y)
+	love.graphics.setColor(0,0,0)
+	for i = -1,1 do
+		for j = -1,1 do
+			if i ~= j or i ~= 0 then
+				love.graphics.print(text, x + i, y + j)
+			end
+		end
+	end
+	love.graphics.setColor(230,230,230)
+	love.graphics.print(text, x, y)
+	
+	love.graphics.setColor(255,255,255)
 end
 
 function Engine:addLight(v)

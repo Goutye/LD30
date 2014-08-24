@@ -3,11 +3,14 @@ local class = require 'middleclass'
 local IScreen = require 'screen.IScreen'
 local GameScreen = class('GameScreen', IScreen)
 
+local Portal = require 'entity.Portal'
 local Fortress = require 'entity.Fortress'
 local MenuBar = require 'MenuBar'
 local Map = require 'Map'
 local Player = require 'entity.Player'
 local Menu = require 'Menu'
+local King = require 'King'
+local Battlefield = require 'Battlefield'
 
 local Bat = require 'entity.Bat'
 
@@ -28,11 +31,31 @@ function GameScreen:initialize()
 	table.insert(self.entities[2], self.player.playerDark)
 	self.entities[2][1].id = 1
 
+	--Portal
+	table.insert(self.entities[1], Portal:new(1))
+	self.portal = {}
+	self.portal[1] = self.entities[1][2]
+	self.portal[1].id = 2
+	table.insert(self.entities[2], Portal:new(2))
+	self.entities[2][2].id = 2
+	self.portal[2] = self.entities[2][2]
+
+	--Map
+
 	self.map = {}
 	self.map[1] = Map:new(1)
 	self.map[2] = Map:new(2)
 
 	self.menuBar = MenuBar:new()
+
+	--King
+
+	self.king = {}
+	self.king[1] = King:new(1,self.fortress[1])
+	self.king[2] = King:new(2,self.fortress[2])
+
+	self.battlefield = Battlefield:new(self.king)
+	--RandomMob
 
 	self.randomNbMob = 0
 	self.randomCurrentWorld = 1
@@ -44,9 +67,27 @@ function GameScreen:initialize()
 end
 
 function GameScreen:update(dt)
+	--CHEAT
+	if mouse:isReleased("r") then
+		engine:screen_setNext(EndScreen:new(self))
+	end
+
+
+	if keyboard:isPressed("e") and not self.menuIsActiv then
+		self.menuIsActiv = true
+	elseif self.menuIsActiv then
+		self.menu:update(dt)
+	end
+
 	self.menuBar:update(dt)
 	self.fortress[1]:update(dt)
 	self.fortress[2]:update(dt)
+
+	for i = 1,2 do
+		self.king[i]:update(dt)
+	end
+
+	self.battlefield:update(dt)
 
 	for _,b in ipairs(self.building) do
 		b:update(dt)
@@ -58,14 +99,6 @@ function GameScreen:update(dt)
 	end
 	for _,p in ipairs(self.entitiesPassiv) do
 		p:update(dt)
-	end
-
-	if self.menuIsActiv then
-		self.menu:update(dt)
-	end
-
-	if keyboard:isPressed("e") then
-		self.menuIsActiv = true
 	end
 end
 
@@ -103,6 +136,11 @@ function GameScreen:draw()
 	if self.menuIsActiv then
 		self.menu:draw()
 	end
+
+	for i = 1,2 do
+		self.king[i]:draw()
+	end
+	self.battlefield:draw()
 
 	for _,p in ipairs(self.entitiesPassiv) do
 		p:draw()
@@ -165,7 +203,8 @@ function GameScreen:generateNightMob(idWorld, time)
 		self.randomCurrentWorld = idWorld
 		self.randomNbMob = 0
 	end
-	local nbMob = 1 + math.floor(self.fortress[idWorld].habitant / 5) -- 1 mob par 5 habs
+	local nbMobMax = 1 + math.floor(self.fortress[idWorld].habitant / 5) -- 1 mob par 5 habs
+	local nbMob = love.math.random(1, nbMobMax)
 	local timeNext = 12/nbMob * self.randomNbMob
 
 	if time > timeNext then

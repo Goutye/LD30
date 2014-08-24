@@ -17,10 +17,16 @@ function MenuBar:initialize()
 	self.v.y = -40
 
 	self.currentAuto = {}
-	self.currentAuto[1] = 0
-	self.currentAuto[2] = 0
+	self.currentAuto[1] = 3
+	self.currentAuto[2] = 3
 
 	self.night = 1
+
+	self.checkDay = {}
+	self.checkDay[1] = false
+	self.checkDay[2] = false
+
+	self.autoOK = true
 end
 
 function MenuBar:update(dt)
@@ -32,6 +38,13 @@ function MenuBar:update(dt)
 	if self.v.y <= 0 and self.v.x < 0 or self.v.y < 0 and self.v.x >= 0 then
 		engine.screen.map[1].shader1:send("night", 1)
 		engine.screen.map[2].shader2:send("night", 0)
+
+		self.checkDay[1] = false
+		if not self.checkDay[2] then
+			engine.screen.king[2].day = engine.screen.king[2].day + 1
+			self.checkDay[2] = true
+		end
+
 		local hour = self.hour + 6
 		if hour > 12 then
 			hour = self.hour - 18
@@ -39,6 +52,12 @@ function MenuBar:update(dt)
 		engine.screen:generateNightMob(1, hour)
 		self.night = 1
 	else
+		self.checkDay[2] = false
+		if not self.checkDay[1] then
+			engine.screen.king[1].day = engine.screen.king[1].day + 1
+			self.checkDay[1] = true
+		end
+
 		engine.screen.map[1].shader1:send("night", 0)
 		engine.screen.map[2].shader2:send("night", 1)
 		local hour = self.hour - 6
@@ -47,16 +66,18 @@ function MenuBar:update(dt)
 	end
 	engine.tileShader:send("night", self.night)
 
-	if mouse:isPressed("l") then
-		local x,y = mouse:wherePressed("l")
-		local box = {x = WINDOW_WIDTH/2 -200, y = 40, w = 140, h = 30}
-		local pos = {x = x, y = y}
-		if engine:AABB_point(box, pos) then
-			self.currentAuto[1] = (self.currentAuto[1] + 1) % 4
-		end
-		box.x = WINDOW_WIDTH-150
-		if engine:AABB_point(box, pos) then
-			self.currentAuto[2] = (self.currentAuto[2] + 1) % 4
+	if self.autoOK then
+		if mouse:isPressed("l") then
+			local x,y = mouse:wherePressed("l")
+			local box = {x = WINDOW_WIDTH/2 -200, y = 40, w = 140, h = 30}
+			local pos = {x = x, y = y}
+			if engine:AABB_point(box, pos) then
+				self.currentAuto[1] = (self.currentAuto[1] + 1) % 4
+			end
+			box.x = WINDOW_WIDTH-150
+			if engine:AABB_point(box, pos) then
+				self.currentAuto[2] = (self.currentAuto[2] + 1) % 4
+			end
 		end
 	end
 end
@@ -76,27 +97,31 @@ function MenuBar:draw()
 	self:drawLifeBar()
 	self:drawRessourcePlayer()
 
-	love.graphics.setColor(255,255,255)
-	love.graphics.rectangle("line", WINDOW_WIDTH/2 -200, 40, 140, 30)
-	love.graphics.rectangle("line", WINDOW_WIDTH -150, 40, 140, 30)
 
-	if self.currentAuto[1] == 0 then
-		love.graphics.printf("AUTO : Farmer", WINDOW_WIDTH/2 -195, 45, 140)
-	elseif self.currentAuto[1] == 1 then
-		love.graphics.printf("AUTO : Lumberjack", WINDOW_WIDTH/2 -195, 45, 140)
-	elseif self.currentAuto[1] == 2 then
-		love.graphics.printf("AUTO : Miner", WINDOW_WIDTH/2 -195, 45, 140)
-	else
-		love.graphics.printf("No Auto command", WINDOW_WIDTH/2 -195, 45, 140)
-	end
-	if self.currentAuto[2] == 0 then
-		love.graphics.printf("AUTO : Farmer",  WINDOW_WIDTH -145, 45, 140)
-	elseif self.currentAuto[2] == 1 then
-		love.graphics.printf("AUTO : Lumberjack",  WINDOW_WIDTH -145, 45, 140)
-	elseif self.currentAuto[2] == 2 then
-		love.graphics.printf("AUTO : Miner",  WINDOW_WIDTH -145, 45, 140)
-	else
-		love.graphics.printf("No Auto command",  WINDOW_WIDTH -145, 45, 140)
+	if self.autoOK then
+		love.graphics.setColor(255,255,255)
+		love.graphics.rectangle("line", WINDOW_WIDTH/2 -200, 40, 140, 30)
+		love.graphics.rectangle("line", WINDOW_WIDTH -150, 40, 140, 30)
+
+	
+		if self.currentAuto[1] == 0 then
+			love.graphics.printf("AUTO : Farmer", WINDOW_WIDTH/2 -195, 45, 140)
+		elseif self.currentAuto[1] == 1 then
+			love.graphics.printf("AUTO : Lumberjack", WINDOW_WIDTH/2 -195, 45, 140)
+		elseif self.currentAuto[1] == 2 then
+			love.graphics.printf("AUTO : Miner", WINDOW_WIDTH/2 -195, 45, 140)
+		else
+			love.graphics.printf("No Auto command", WINDOW_WIDTH/2 -195, 45, 140)
+		end
+		if self.currentAuto[2] == 0 then
+			love.graphics.printf("AUTO : Farmer",  WINDOW_WIDTH -145, 45, 140)
+		elseif self.currentAuto[2] == 1 then
+			love.graphics.printf("AUTO : Lumberjack",  WINDOW_WIDTH -145, 45, 140)
+		elseif self.currentAuto[2] == 2 then
+			love.graphics.printf("AUTO : Miner",  WINDOW_WIDTH -145, 45, 140)
+		else
+			love.graphics.printf("No Auto command",  WINDOW_WIDTH -145, 45, 140)
+		end
 	end
 end
 
@@ -111,9 +136,13 @@ function MenuBar:drawLifeBar()
 end
 
 function MenuBar:drawRessourcePlayer()
-	love.graphics.setColor(255,255,255)
-	love.graphics.printf("W : " .. engine.screen.player.bois .." S : ".. engine.screen.player.pierre.." M : " .. engine.screen.player.nourriture, 10, 100, 100)
-	love.graphics.printf("W : " .. engine.screen.player.playerDark.bois .." S : ".. engine.screen.player.playerDark.pierre.." M : " .. engine.screen.player.playerDark.nourriture, 110 + WINDOW_WIDTH/2, 100, 100)
+	if self.autoOK then
+		love.graphics.setColor(255,255,255)
+		love.graphics.printf("W : " .. engine.screen.player.bois .." S : ".. engine.screen.player.pierre.." M : " .. engine.screen.player.nourriture, 10, 100, 100)
+		love.graphics.printf("W : " .. engine.screen.player.playerDark.bois .." S : ".. engine.screen.player.playerDark.pierre.." M : " .. engine.screen.player.playerDark.nourriture, 110 + WINDOW_WIDTH/2, 100, 100)
+		love.graphics.printf("Lvl : " .. engine.screen.player.lvl, 10, 120, 100)
+		love.graphics.printf("Lvl : " .. engine.screen.player.playerDark.lvl, 10 + WINDOW_WIDTH/2, 120, 100)
+	end
 end
 
 function MenuBar:onQuit()

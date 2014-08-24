@@ -42,7 +42,7 @@ function Bat:update(dt)
 
 	local box = {x = self.pos.x, y = self.pos.y, w = self.size, h = self.size}
 
-	if engine:AABB_AABB(box, engine.screen.entities[self.idWorld][1]:getBox()) and engine.screen.menuBar.night == self.idWorld then
+	if engine:AABB_AABB(box, engine.screen.entities[self.idWorld][1]:getBox()) and (engine.screen.menuBar.night == self.idWorld or engine:AABB_AABB(box, engine.screen.fortress[self.idWorld].box)) then
 		engine.screen.entities[1][1]:hit(self.lvl)
 	end
 	if engine:AABB_AABB(box, engine.screen.fortress[self.idWorld].box) then
@@ -67,9 +67,9 @@ function Bat:draw()
 	end
 	if engine.screen.menuBar.night == self.idWorld or engine:AABB_AABB(box, engine.screen.fortress[self.idWorld].box) then
 		love.graphics.draw(self.image, self.pos.x, self.pos.y)
+		self:drawLifeBar()
 	end
-
-	self:drawLifeBar()
+	
 	love.graphics.setShader()
 
 end

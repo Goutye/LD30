@@ -24,6 +24,7 @@ function IEntity:drawLifeBar()
 	love.graphics.setColor(159,36,36)
 	love.graphics.rectangle("fill", self.pos.x+1, self.pos.y - 9, (self.w-2) * self.life/self.maxLife, 3)
 	love.graphics.setColor(255,255,255)
+	love.graphics.printf(self.lvl, self.pos.x - 14, self.pos.y - 13, 14, "center")
 end
 
 function IEntity:onQuit()

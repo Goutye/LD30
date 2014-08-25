@@ -51,17 +51,13 @@ function Fortress:initialize(id, mode, difficulty)
 	if mode ~= nil then
 		for i = 1,31 do
 			table.insert(self.agriculteur, Agriculteur:new(self))
-			table.insert(self.agriculteur, Agriculteur:new(self))
 			table.insert(self.mineur, Mineur:new(self))
-			table.insert(self.mineur, Mineur:new(self))
-			table.insert(self.bucheron, Bucheron:new(self))
 			table.insert(self.bucheron, Bucheron:new(self))
 			self.habitant = 280
-			self.soldat = 100
 		end
 	else
 		if difficulty == 0 then
-			for i = 1, 8 do
+			for i = 1, 14 do
 				table.insert(self.agriculteur, Agriculteur:new(self))
 				if i%2 == 0 then
 					table.insert(self.mineur, Mineur:new(self))
@@ -72,6 +68,14 @@ function Fortress:initialize(id, mode, difficulty)
 			table.insert(self.agriculteur, Agriculteur:new(self))
 			table.insert(self.agriculteur, Agriculteur:new(self))
 			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.agriculteur, Agriculteur:new(self))
+			table.insert(self.mineur, Mineur:new(self))
+			table.insert(self.bucheron, Bucheron:new(self))
+			table.insert(self.mineur, Mineur:new(self))
+			table.insert(self.bucheron, Bucheron:new(self))
 			table.insert(self.mineur, Mineur:new(self))
 			table.insert(self.bucheron, Bucheron:new(self))
 		else

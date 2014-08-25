@@ -3,9 +3,9 @@ local class = require 'middleclass'
 local IEntity = require 'entity.IEntity'
 local PlayerDark = class('PlayerDark', IEntity)
 
-function PlayerDark:initialize(x,y)
+function PlayerDark:initialize(x,y, lvl)
 	self.life = 10
-	self.lvl = 1
+	self.lvl = lvl
 	self.size = 32
 	self.id = 2
 

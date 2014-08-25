@@ -28,7 +28,7 @@ function GameScreen:initialize(difficulty, mode)
 	self.fortress[1] = Fortress:new(1, mode, difficulty)
 	self.fortress[2] = Fortress:new(2, mode, difficulty)
 
-	table.insert(self.entities[1], Player:new(self.fortress[1].pos.x, self.fortress[1].pos.y + 200, difficulty))
+	table.insert(self.entities[1], Player:new(self.fortress[1].pos.x, self.fortress[1].pos.y + 200, mode, difficulty))
 	self.player = self.entities[1][1]
 	self.player.id = 1
 	table.insert(self.entities[2], self.player.playerDark)

@@ -4,10 +4,14 @@ local IEntity = require 'entity.IEntity'
 local Player = class('Player', IEntity)
 local PlayerDark = require 'entity.PlayerDark'
 
-function Player:initialize(x,y, difficulty)
+function Player:initialize(x,y, mode, difficulty)
 	self.maxLife = 100 * (3 - difficulty)
 	self.life = 100 * (3 - difficulty)
-	self.lvl = 1
+	if mode then
+		self.lvl = 3 + 2 * (2-difficulty)
+	else
+		self.lvl = 1
+	end
 	self.size = 32
 	self.id = 1
 
@@ -43,7 +47,7 @@ function Player:initialize(x,y, difficulty)
 	self.bois = 0
 	self.nourriture = 0
 
-	self.playerDark = PlayerDark:new(x,y)
+	self.playerDark = PlayerDark:new(x,y, self.lvl)
 
 	self.immortal = false
 	self.timeImmortal = 1

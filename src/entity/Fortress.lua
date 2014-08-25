@@ -212,7 +212,7 @@ function Fortress:update(dt)
 		e:update(dt)
 	end
 
-	if self.ouvrier > 0 and engine.screen.menuBar.autoOK and engine.currentAuto[self.id] < 3 then
+	if self.ouvrier > 0 and engine.screen.menuBar.autoOK and engine.screen.menuBar.currentAuto[self.id] < 3 then
 		self.ouvrier = self.ouvrier - 1
 		if engine.screen.menuBar.currentAuto[self.id] == 0 then
 			table.insert(self.agriculteur, Agriculteur:new(self))

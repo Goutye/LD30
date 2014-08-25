@@ -28,6 +28,8 @@ function King:initialize(idWorld, fortress, mode)
 	self.checkNewTravel = false
 
 	self.menu = true
+
+	self.image = love.graphics.newImage("assets/sprites/Group.png")
 end
 
 function King:update(dt)
@@ -54,7 +56,8 @@ function King:update(dt)
 			self.fortress.soldat = self.fortress.soldat - self.nbSoldiers
 			self.inTravel = true
 
-			engine.screen:addEntityPassiv(Popup:new("A L'ASSAULT ! " .. self.nbSoldiers .. " are in the road!", 3,self.idWorld))
+			love.audio.play(engine.sfx.assault)
+			engine.screen:addEntityPassiv(Popup:new("A L'ASSAULT ! " .. self.nbSoldiers .. " are in the road!", 3,self.idWorld, 1))
 		elseif engine.screen.king[self.idOtherWorld].inTravel then
 			if love.math.random(1,4) == 1 and not self.checkNewTravel then
 				self.day = self.dayBeforeNextWave
@@ -89,7 +92,8 @@ function King:draw()
 			love.graphics.setColor(0,0,0)
 			love.graphics.rectangle("line", 10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1) +(WINDOW_WIDTH/2-50-90) * ((self.idWorld - 1) * (1-self.timeTravel/King.TIMEENDTRAVEL) + (self.idWorld - 2) * -self.timeTravel/King.TIMEENDTRAVEL), WINDOW_HEIGHT - 90, 80, 80)
 			love.graphics.setColor(255,255,255)
-			love.graphics.printf(self.nbSoldiers, 10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1) +(WINDOW_WIDTH/2-50-90) * ((self.idWorld - 1) * (1-self.timeTravel/King.TIMEENDTRAVEL) + (self.idWorld - 2) * -self.timeTravel/King.TIMEENDTRAVEL), WINDOW_HEIGHT - 70, 80, "center")
+			love.graphics.draw(self.image, 20 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1) +(WINDOW_WIDTH/2-50-90) * ((self.idWorld - 1) * (1-self.timeTravel/King.TIMEENDTRAVEL) + (self.idWorld - 2) * -self.timeTravel/King.TIMEENDTRAVEL), WINDOW_HEIGHT - 75)
+			love.graphics.printf(self.nbSoldiers, 10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1) +(WINDOW_WIDTH/2-50-90) * ((self.idWorld - 1) * (1-self.timeTravel/King.TIMEENDTRAVEL) + (self.idWorld - 2) * -self.timeTravel/King.TIMEENDTRAVEL), WINDOW_HEIGHT - 85, 80, "center")
 		else
 			love.graphics.setColor(255,255,255)
 			love.graphics.printf("The king thinks about a machiavellian plan...",10 + (WINDOW_WIDTH/2 + 50) * (self.idWorld - 1), WINDOW_HEIGHT - 60, WINDOW_WIDTH/2 - 50, "center")

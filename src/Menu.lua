@@ -33,12 +33,16 @@ function Menu:update(dt)
 	local player2 = engine.screen.player.playerDark
 
 	if keyboard:isPressed("r") then
+		love.audio.stop(engine.sfx.ok)
+		love.audio.play(engine.sfx.ok)
 		if self.firstCheck then
 			self.choice[self.firstChoice] = (self.choice[self.firstChoice] - 1) % 3
 		else
 			self.firstChoice = (self.firstChoice - 1) % 2
 		end
 	elseif keyboard:isPressed("f") then
+		love.audio.stop(engine.sfx.ok)
+		love.audio.play(engine.sfx.ok)
 		if self.firstCheck then
 			self.choice[self.firstChoice] = (self.choice[self.firstChoice] + 1) % 3
 		else
@@ -48,7 +52,10 @@ function Menu:update(dt)
 	if keyboard:isPressed("escape") or keyboard:isPressed("backspace") or keyboard:isPressed("3") then
 		engine.screen.menuIsActiv = false
 		self.firstCheck = false
+		love.audio.play(engine.sfx.no)
 	elseif keyboard:isPressed("e") then
+		love.audio.stop(engine.sfx.ok)
+		love.audio.play(engine.sfx.ok)
 		if not self.firstCheck then
 			self.firstCheck = true
 		else
@@ -157,17 +164,17 @@ function Menu:draw()
 
 		love.graphics.setColor(0,0,0)
 		if self.firstChoice == 0 then
-			love.graphics.printf("Tower 1 dmg - Stn 5 Wd 10", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("Tower 2 dmg - Stn 20 Wd 15", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("Tower 3 dmg - Stn 60 Wd 30", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
+			love.graphics.printf("Tower 1 dmg - Stn 5 Wd 10", 115, WINDOW_HEIGHT/3*2 + 30, 200, "center")
+			love.graphics.printf("Tower 2 dmg - Stn 20 Wd 15", 115, WINDOW_HEIGHT/3*2 + 90, 200, "center")
+			love.graphics.printf("Tower 3 dmg - Stn 60 Wd 30", 115, WINDOW_HEIGHT/3*2 + 150, 200, "center")
 
-			love.graphics.printf("Throw wood?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("Throw workers?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("Throw stone?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 100, "center")
+			love.graphics.printf("Throw wood?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 200, "center")
+			love.graphics.printf("Throw workers?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 200, "center")
+			love.graphics.printf("Throw stone?", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 150, 200, "center")
 		else
-			love.graphics.printf("Throw wood?", 115, WINDOW_HEIGHT/3*2 + 30, 100, "center")
-			love.graphics.printf("Throw workers?", 115, WINDOW_HEIGHT/3*2 + 90, 100, "center")
-			love.graphics.printf("Throw stone?", 115, WINDOW_HEIGHT/3*2 + 150, 100, "center")
+			love.graphics.printf("Throw wood?", 115, WINDOW_HEIGHT/3*2 + 30, 200, "center")
+			love.graphics.printf("Throw workers?", 115, WINDOW_HEIGHT/3*2 + 90, 200, "center")
+			love.graphics.printf("Throw stone?", 115, WINDOW_HEIGHT/3*2 + 150, 200, "center")
 
 			love.graphics.printf("Cannon 1 dmg - Stn 10 Wd 5", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 30, 100, "center")
 			love.graphics.printf("Cannon 2 dmg - Stn 15 Wd 20", WINDOW_WIDTH - 215, WINDOW_HEIGHT/3*2 + 90, 100, "center")

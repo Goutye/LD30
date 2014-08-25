@@ -52,8 +52,8 @@ function Bat:update(dt)
 		end
 	else
 		if engine.screen.menuBar.night == self.idWorld then
-			self.pos.x = self.pos.x + dt * (self.dir.x * self.lvl * 200)
-			self.pos.y = self.pos.y + dt * (self.dir.y * self.lvl * 200)
+			self.pos.x = self.pos.x + dt * (self.dir.x * 150 + self.dir.x * 40 * self.lvl )
+			self.pos.y = self.pos.y + dt * (self.dir.y * 150 + self.dir.y * 40 * self.lvl )
 		end
 	end
 end

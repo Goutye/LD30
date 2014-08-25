@@ -4,9 +4,16 @@ local TitleScreen = class('TitleScreen')
 
 function TitleScreen:initialize()
 	self.image = love.graphics.newImage("assets/screen/titlescreen.png")
+	self.music = false
 end
 
 function TitleScreen:update(dt)
+	if not self.music then
+		self.music = true
+		love.audio.stop()
+		love.audio.play(engine.music.menu)
+	end
+
 	if mouse:isReleased("l") then
 		engine:screen_setNext(MenuScreen:new())
 	end

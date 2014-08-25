@@ -6,7 +6,7 @@ function MenuScreen:initialize()
 	self.button = {x= WINDOW_WIDTH/8*7, y= WINDOW_HEIGHT/6*5, w = 50, h = 50}
 	self.image = love.graphics.newImage("assets/screen/howtoplay.png")
 	self.tuto = {}
-	for i = 1, 4 do
+	for i = 1, 5 do
 		table.insert(self.tuto, love.graphics.newImage("assets/screen/tutorial"..i..".png"))
 	end
 
@@ -25,8 +25,8 @@ function MenuScreen:update(dt)
 			love.graphics.setFont(engine.font3)
 		else
 			self.current = self.current + 1
-			if self.current == 5 then
-				self.current = 4
+			if self.current == 6 then
+				self.current = 5
 				engine:screen_setNext(StoryScreen:new())
 			end
 		end

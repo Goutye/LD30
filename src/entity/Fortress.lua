@@ -43,7 +43,7 @@ function Fortress:initialize(id, mode, difficulty)
 
 	self.bois = 0
 	self.pierre = 0
-	self.habitant = 7 -- Player + Le roi + Agriculteur
+	self.habitant = 3 -- Player + Le roi + Agriculteur
 
 	self.endSentence = ""
 	self.popupSet = false
@@ -236,7 +236,7 @@ function Fortress:update(dt)
 	end
 	if self.pos.r > 62*Tileset.TILESIZE and not self.popupSet then
 		self.popupSet = true
-		engine.screen:addEntityPassiv(Popup:new("Hey slave! We just discovered a Portal! Maybe this is the reason of this attack!", 5, self.id))
+		engine.screen:addEntityPassiv(Popup:new("Hey slave! We just discovered a Portal! Maybe this is the reason of this attack!", 5, self.id, 1))
 		engine.screen.king[self.id].portalDiscovered = true
 	end
 	
@@ -361,8 +361,14 @@ end
 
 function Fortress:hit(dmg)
 	self.life = self.life - dmg
+
+	if dmg >= 10 then
+		love.audio.play(engine.sfx.hit)
+	end
+
 	if self.life <= 0 then
 		self.life = 0
+		love.audio.play(engine.sfx.fortress)
 		engine:screen_setNext(EndScreen:new(engine.screen))
 	end
 end

@@ -10,7 +10,32 @@ function Engine:initialize(screen)
 	self.font = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 14)
 	self.font2 = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 60)
 	self.font3 = love.graphics.newFont("assets/font/visitor2.ttf", 18)
+	self.font7 = love.graphics.newFont("assets/font/visitor2.ttf", 20)
 	self.font4 = love.graphics.newFont("assets/font/FORCED_SQUARE.ttf", 32)
+	self.font5 = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 20)
+	self.font6 = love.graphics.newFont("assets/font/chinese_rocks_rg.ttf", 140)
+
+	self.music = {}
+	self.music.menu = love.audio.newSource("assets/music/menu.ogg")
+	self.music.start = love.audio.newSource("assets/music/start.ogg")
+	self.music.portal = love.audio.newSource("assets/music/portal.ogg")
+	self.music.win = love.audio.newSource("assets/music/win.ogg")
+	self.music.lose = love.audio.newSource("assets/music/lose.ogg")
+	
+	for _,e in pairs(self.music) do
+		e:setLooping(true)
+	end
+
+	self.sfx = {}
+	self.sfx.click = love.audio.newSource("assets/sfx/click.wav")
+	self.sfx.sword = love.audio.newSource("assets/sfx/sword.wav")
+	self.sfx.assault = love.audio.newSource("assets/sfx/assault.wav")
+	self.sfx.troup = love.audio.newSource("assets/sfx/troup.wav")
+	self.sfx.fortress = love.audio.newSource("assets/sfx/fortress.wav")
+	self.sfx.death = love.audio.newSource("assets/sfx/death.wav")
+	self.sfx.hit = love.audio.newSource("assets/sfx/hit.wav")
+	self.sfx.ok = love.audio.newSource("assets/sfx/ok.wav")
+	self.sfx.no = love.audio.newSource("assets/sfx/no.wav")
 
 	self.TILESIZE = 64
 	self.TIMEFORONEDAY = 24
@@ -73,38 +98,16 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 		if(c.x > 4.){ c = vec3(4.,4.,4.);}
 		pixel.rgb *= c;
 	}
-	if(pixel_coords.y < love_ScreenSize.y - 80 && pixel_coords.x > love_ScreenSize.x/2 && night > 1.5){
-		c = ambiantLight;
-		if(nbLights > 0.5){
-			for(i=0;i<nbLights;i++){
-				posLight = vec3(posLights[i][0] - cameraX + love_ScreenSize.x/4*3 - 16, love_ScreenSize.y - (posLights[i][1] - cameraY + love_ScreenSize.y/2 + 40 - 16), 100.0);
-				light = vec3(pixel_coords.x, pixel_coords.y, 0) - posLight;
-				lightDirection = normalize(vec3(posLights[i][2]- cameraX, love_ScreenSize.y - posLights[i][3]+ cameraY, 2.0) - posLight);
-				lightCosAngle = cos(2*PI);
-				lightCosOutAngle = cos(2*PI);
-				pixelDirection = normalize(vec3(pixel_coords.x, pixel_coords.y, 2.0) - posLight);
-				diffCos = dot(pixelDirection, lightDirection);
-
-				if( i == 0 || i == 3){ 
-					col = vec3(1.0,1.0,1.0);
-				}else if(i == 1 || i == 4){
-					col = vec3(1.0,1.0,1.0);
-				}else{
-					col = vec3(1.0,1.0,1.0);
-				}
-				if(c.x > 4.){ c = vec3(4.,4.,4.);}
-	       		c += col * power * (-dot(normal, normalize(light)) / pow(1+ length(light) / pxByMeter , 2));
-			}
-		}
-
-		pixel.rgb *= c;
-	}
 	return pixel;
 }
 ]]
 end
 
 function Engine:update(dt)
+	if mouse:isPressed("l") then
+		love.audio.play(self.sfx.click)
+	end
+
 	if self.nextScreen ~= nil then
 		self.screen:onQuit()
 		self.screen = self.nextScreen
@@ -139,11 +142,48 @@ function Engine:printOutLine(text,x,y)
 	love.graphics.setColor(255,255,255)
 end
 
+function Engine:printOutLineGreen(text,x,y,r)
+	love.graphics.setColor(255,255,255)
+	for i = -1,1 do
+		for j = -1,1 do
+			if i ~= j or i ~= 0 then
+				love.graphics.print(text, x + i, y + j, r)
+			end
+		end
+	end
+	love.graphics.setColor(78, 174, 68)
+	love.graphics.print(text, x, y, r)
+	
+	love.graphics.setColor(255,255,255)
+end
+
+function Engine:printOutLineRed(text,x,y,r)
+	love.graphics.setColor(255,255,255)
+	for i = -1,1 do
+		for j = -1,1 do
+			if i ~= j or i ~= 0 then
+				love.graphics.print(text, x + i, y + j, r)
+			end
+		end
+	end
+	love.graphics.setColor(155, 10 ,10)
+	love.graphics.print(text, x, y, r)
+	
+	love.graphics.setColor(255,255,255)
+end
+
 function Engine:addLight(v)
 	table.insert(self.lights, {v.x, v.y, v.x+1, v.y+1})
 	self.nbLights = self.nbLights + 1
 	self.tileShader:send("posLights", unpack(self.lights))
 	self.tileShader:send("nbLights", self.nbLights)
+end
+
+function Engine:shader_reset()
+	while #self.lights > 0 do
+		table.remove(self.lights)
+		self.nbLights = self.nbLights - 1
+	end
 end
 
 --SCREEN

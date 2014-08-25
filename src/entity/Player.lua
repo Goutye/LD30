@@ -51,9 +51,13 @@ function Player:initialize(x,y, difficulty)
 
 	self.timeWithoutHit = 0
 	self.timeMaxHit = 5 * (3 - self.difficulty)
+
+	self.diagonale = false
 end
 
 function Player:update(dt)
+	self.diagonale = true
+
 	if self.swordAnimation then
 		self.swordTime = self.swordTime + dt
 		if self.swordTime >= self.swordTimeAnimation then
@@ -78,10 +82,12 @@ function Player:update(dt)
 	if keyboard:isDown("up") or keyboard:isDown("z")  then
 		self.spd.y = self.spd.y * IEntity.FRICTION - dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.y = -1
+
 	elseif keyboard:isDown("down") or keyboard:isDown("s")  then
 		self.spd.y = self.spd.y * IEntity.FRICTION + dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.y = 1
 	else
+		self.diagonale = false
 		self.spd.y = self.spd.y * IEntity.FRICTION
 	end
 	if keyboard:isDown("left") or keyboard:isDown("q") then
@@ -91,12 +97,21 @@ function Player:update(dt)
 		self.spd.x = self.spd.x * IEntity.FRICTION + dt * IEntity.SPEED * (1 - IEntity.FRICTION)
 		self.dir.x = 1
 	else
+		self.diagonale = false
 		self.spd.x = self.spd.x * IEntity.FRICTION
 	end
 	self.dir = engine:vector_normalize(self.dir)
 	self.playerDark.dir = self.dir
 
+	if self.diagonale then
+		self.spd.x = self.spd.x * 1 / math.sqrt(2)
+		self.spd.y = self.spd.y * 1 / math.sqrt(2)
+	end
+
 	if keyboard:isPressed(" ") then
+		love.audio.stop(engine.sfx.sword)
+		love.audio.play(engine.sfx.sword)
+
 		self.swordAnimation = true
 		self.playerDark.swordAnimation = true
 		local box = self:getBoxWeapon()
@@ -205,6 +220,7 @@ function Player:hit(dmg)
 		if self.life <= 0 then
 			engine:screen_setNext(EndScreen:new(engine.screen))
 			self.life = 0
+			love.audio.play(engine.sfx.death)
 		end
 
 		self.playerDark.life = self.life

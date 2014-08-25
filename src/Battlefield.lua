@@ -43,6 +43,7 @@ function Battlefield:update(dt)
 
 			self.nbSoldiers[1] = 0
 			self.nbSoldiers[2] = 0
+			love.audio.play(engine.sfx.troup)
 		elseif self.nbSoldiers[2] <= 0 then
 			self.inFight = false
 			engine.screen:addEntityPassiv(Popup:new("DARK World losed ! " .. self.nbSoldiers[1] .. " are coming to destroy the dark fortress!"))
@@ -55,6 +56,7 @@ function Battlefield:update(dt)
 
 			self.nbSoldiers[1] = 0
 			self.nbSoldiers[2] = 0
+			love.audio.play(engine.sfx.troup)
 		else
 			if self.attack == true then
 				self.attack = false

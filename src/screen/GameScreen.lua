@@ -67,17 +67,29 @@ function GameScreen:initialize(difficulty, mode)
 	self.menu = Menu:new()
 
 	self.nbEnemyDead = 0
+
+	--MUSIC
+	love.audio.stop()
+	love.audio.play(engine.music.start)
+	self.portalMusic = false
 end
 
 function GameScreen:update(dt)
 	--CHEAT
-	--if mouse:isReleased("r") then
-	--	engine:screen_setNext(EndScreen:new(self))
-	--end
+	if mouse:isReleased("r") then
+		engine:screen_setNext(EndScreen:new(self))
+	end
+	if (self.king[1].portalDiscovered or self.king[1].portalDiscovered) and not self.portalMusic then
+		self.portalMusic = true
+		love.audio.stop(engine.music.start)
+		love.audio.play(engine.music.portal)
+	end
 
 
 	if keyboard:isPressed("e") and not self.menuIsActiv then
 		self.menuIsActiv = true
+		love.audio.stop(engine.sfx.ok)
+		love.audio.play(engine.sfx.ok)
 	elseif self.menuIsActiv then
 		self.menu:update(dt)
 	end
@@ -116,6 +128,8 @@ function GameScreen:draw()
 	love.graphics.line(WINDOW_WIDTH/2+self.menuBar.w/2,self.menuBar.h, WINDOW_WIDTH, self.menuBar.h)
 
 	love.graphics.setColor(255,255,255)
+
+	love.graphics.setFont(engine.font7)
 
 	for _,b in ipairs(self.building) do
 		b:draw()

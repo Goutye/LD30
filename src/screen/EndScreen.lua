@@ -7,11 +7,18 @@ function EndScreen:initialize(GS)
 	self.win = true
 	self.sentence = "Because you're too powerful!"
 
+	--SHADER
+	engine:shader_reset()
+
+	self.image = love.graphics.newImage("assets/screen/titlescreen.png")
+
 	if self.GS.fortress[1].life <= 0 or self.GS.fortress[2].life <= 0 then
 		self.sentence = "Poor little fortress.."
+		self.win = false
 	end
 	if self.GS.player.life <= 0 then
 		self.sentence = "YOU DIED... Bats got you ?"
+		self.win = false
 	end
 
 	self.flag = {}
@@ -23,6 +30,14 @@ function EndScreen:initialize(GS)
 	self.bat = love.graphics.newImage("assets/sprites/Bat.png")
 	self.troup = love.graphics.newImage("assets/sprites/Group.png")
 	self.fortress = love.graphics.newImage("assets/fortress1.png")
+
+	love.audio.stop(engine.music.start)
+	love.audio.stop(engine.music.portal)
+	if self.win then
+		love.audio.play(engine.music.win)
+	else
+		love.audio.play(engine.music.lose)
+	end
 end
 
 function EndScreen:update(dt)
@@ -32,11 +47,24 @@ function EndScreen:update(dt)
 end
 
 function EndScreen:draw()
-	love.graphics.setColor(0,0,0)
-	love.graphics.rectangle("fill", 0,0,WINDOW_WIDTH, WINDOW_HEIGHT)
+	love.graphics.draw(self.image, 0 , 0)
+	love.graphics.setColor(0,0,0,240)
+	love.graphics.rectangle("fill",0,0,WINDOW_WIDTH, WINDOW_HEIGHT)
+
+	love.graphics.setFont(engine.font4)
 
 	love.graphics.setColor(255,255,255)
-	love.graphics.print(self.sentence,200,40)
+	love.graphics.print('"'..self.sentence..'"',450,300)
+
+	love.graphics.setFont(engine.font6)
+	if self.win then
+		engine:printOutLineGreen("[SUCCES]", 800, 50, math.pi/6)
+	else
+		engine:printOutLineRed("[FAILED]", 800, 50, math.pi/6)
+	end
+
+	love.graphics.setFont(engine.font5)
+
 	love.graphics.print("You killed your first Bat :", 20, 80)
 	love.graphics.print("The kings talked to you :",20, 110)
 	love.graphics.print("The portal can be hit : ", 20, 140)
@@ -98,6 +126,7 @@ function EndScreen:draw()
 	love.graphics.print("Wood :       \t".. f1.bois .. "\t" .. f2.bois, 500, 530)
 
 	love.graphics.setColor(255,255,255)
+	love.graphics.setFont(engine.defaut)
 end
 
 function EndScreen:onQuit()

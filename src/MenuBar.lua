@@ -70,7 +70,7 @@ function MenuBar:update(dt)
 	end
 	engine.tileShader:send("night", self.night)
 
-	if self.autoOK then
+	if false then
 		if mouse:isPressed("l") then
 			local x,y = mouse:wherePressed("l")
 			local box = {x = WINDOW_WIDTH/2 -200, y = 40, w = 140, h = 30}

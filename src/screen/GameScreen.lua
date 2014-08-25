@@ -76,9 +76,9 @@ end
 
 function GameScreen:update(dt)
 	--CHEAT
-	if mouse:isReleased("r") then
-		engine:screen_setNext(EndScreen:new(self))
-	end
+	--if mouse:isReleased("r") then
+		--engine:screen_setNext(EndScreen:new(self))
+	--end
 	if (self.king[1].portalDiscovered or self.king[1].portalDiscovered) and not self.portalMusic then
 		self.portalMusic = true
 		love.audio.stop(engine.music.start)

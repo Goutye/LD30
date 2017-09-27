@@ -55,32 +55,34 @@ extern float night;
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 {
-	int i;
 	vec3 posLight;
 	vec3 normal = vec3(0.0, 0.0, 1.0);
 	vec3 light;
 	vec4 pixel = Texel(texture, texture_coords );
-	number power =  60;
+	float power =  60.0;
 	vec3 c = vec3(0.0);
 	vec3 col;
 	vec3 ambiantLight = vec3(1., 1., 1.);
 
 	//coeff 
 	vec3 lightDirection, pixelDirection;
-	number lightCosAngle, lightCosOutAngle, diffCos;
-	number LIGHT_SOFT_ANGLE = PI/12;
+	float lightCosAngle, lightCosOutAngle, diffCos;
+	float LIGHT_SOFT_ANGLE = PI/12.0;
 	float shadow;
 
-	if(pixel_coords.y < love_ScreenSize.y - 80 && pixel_coords.x < love_ScreenSize.x/2 && night < 1.5){
+	if(pixel_coords.y < love_ScreenSize.y - 80.0 && pixel_coords.x < love_ScreenSize.x/2.0 && night < 1.5){
 
 		c = ambiantLight;
 		if(nbLights > 0.5){
-			for(i=0;i<nbLights;i++){
-				posLight = vec3(posLights[i][0] - cameraX + love_ScreenSize.x/4 - 16, love_ScreenSize.y - (posLights[i][1] - cameraY + love_ScreenSize.y/2 + 40 - 16), 100.0);
-				light = vec3(pixel_coords.x, pixel_coords.y, 0) - posLight;
+			for(int i = 0; i < 100; i++) {
+				if (i >= int(nbLights)) {
+					break;
+				}
+				posLight = vec3(posLights[i][0] - cameraX + love_ScreenSize.x/4.0 - 16.0, love_ScreenSize.y - (posLights[i][1] - cameraY + love_ScreenSize.y/2.0 + 40.0 - 16.0), 100.0);
+				light = vec3(pixel_coords.x, pixel_coords.y, 0.0) - posLight;
 				lightDirection = normalize(vec3(posLights[i][2]- cameraX, love_ScreenSize.y - posLights[i][3]+ cameraY, 2.0) - posLight);
-				lightCosAngle = cos(2*PI);
-				lightCosOutAngle = cos(2*PI);
+				lightCosAngle = cos(2.0*PI);
+				lightCosOutAngle = cos(2.0*PI);
 				pixelDirection = normalize(vec3(pixel_coords.x, pixel_coords.y, 2.0) - posLight);
 				diffCos = dot(pixelDirection, lightDirection);
 
@@ -92,7 +94,7 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 					col = vec3(1.0,1.0,1.0);
 				}
 
-	       		c += col * power * (-dot(normal, normalize(light)) / pow(1+ length(light) / pxByMeter , 2));
+	       		c += col * power * (-dot(normal, normalize(light)) / pow(1.0+ length(light) / pxByMeter , 2.0));
 			}
 		}
 		if(c.x > 4.){ c = vec3(4.,4.,4.);}
@@ -101,6 +103,77 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
 	return pixel;
 }
 ]]
+
+	self.shader1 = love.graphics.newShader[[
+extern float night;
+extern float r;
+extern float player[2];
+
+float distanceGame(vec2 v1, vec2 v2){
+	vec2 v3 = v2 - v1;
+	return sqrt(v3[0]*v3[0] + v3[1] *v3[1]);
+}
+
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
+{
+	vec4 pixel = Texel(texture, texture_coords);
+
+	vec2 fortress = vec2(64. * 63.4, 64. * 63.5);
+	vec2 pixelCoords = vec2(pixel_coords[0] + player[0] - (love_ScreenSize.x/4.0 - 16.0), (pixel_coords[1]) + player[1] - (love_ScreenSize.y/2.0 + 40.0 - 16.0));
+	float dist = distanceGame(fortress, pixelCoords);
+
+	if(dist > r){
+		pixel.rgb = vec3(0.,0.,0.);
+	}
+
+	if(pixel_coords.x >= love_ScreenSize.x/2.0){
+		pixel.a = 0.;
+	}
+
+	if(night > 0.0){
+		pixel.rgb *= vec3(0.2,0.2,0.2);
+	}
+
+	return pixel;
+}
+]]
+
+	self.shader2 = love.graphics.newShader[[
+extern float night;
+extern float r;
+extern float player[2];
+
+float distanceGame(vec2 v1, vec2 v2){
+	vec2 v3 = v2 - v1;
+	return sqrt(v3[0]*v3[0] + v3[1] *v3[1]);
+}
+
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
+{
+	vec4 pixel = Texel(texture, texture_coords);
+
+	vec2 fortress = vec2(64. * 63.4, 64. * 63.5);
+	vec2 pixelCoords = vec2(pixel_coords[0] + player[0] - (love_ScreenSize.x/4.0*3.0 - 16.0), (pixel_coords[1]) + player[1] - (love_ScreenSize.y/2.0 + 40.0 - 16.0));
+	float dist = distanceGame(fortress, pixelCoords);
+
+	if(dist > r){
+		pixel.rgb = vec3(0.,0.,0.);
+	}
+
+	if(pixel_coords.x < love_ScreenSize.x/2.0){
+		pixel.a = 0.;
+	}
+
+	if(night > 0.0){
+		pixel.rgb *= vec3(0.2,0.2,0.2);
+	}else{
+
+	}
+
+	return pixel;
+}
+]]
+
 end
 
 function Engine:update(dt)

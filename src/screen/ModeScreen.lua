@@ -16,8 +16,8 @@ function ModeScreen:initialize()
 end
 
 function ModeScreen:update(dt)
-	if mouse:isPressed("l") then
-		local x,y = mouse:wherePressed("l")
+	if mouse:isPressed(1) then
+		local x,y = mouse:wherePressed(1)
 		local pos = {x=x,y=y}
 
 		if engine:AABB_point(self.box, pos) then

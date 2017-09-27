@@ -14,7 +14,7 @@ function TitleScreen:update(dt)
 		love.audio.play(engine.music.menu)
 	end
 
-	if mouse:isReleased("l") then
+	if mouse:isReleased(1) then
 		engine:screen_setNext(MenuScreen:new())
 	end
 end

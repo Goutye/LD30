@@ -30,7 +30,7 @@ function Fortress:initialize(id, mode, difficulty)
 	self.pos = {}
 	self.pos.x = 63.4 * Tileset.TILESIZE
 	self.pos.y = 63.5 * Tileset.TILESIZE
-	self.pos.r = Tileset.TILESIZE * 6
+	self.pos.r = 100
 
 	self.box = {x = self.pos.x-192/3, y = self.pos.y-192/3, w = 192/3*2, h = 192/3*2}
 	self.boxFull = {x = self.pos.x-192/2, y = self.pos.y-192/2, w = 198, h = 198}
@@ -103,8 +103,8 @@ function Fortress:update(dt)
 	end
 
 
-	if mouse:isPressed("l") then
-		local x,y = mouse:wherePressed("l")
+	if mouse:isPressed(1) then
+		local x,y = mouse:wherePressed(1)
 		local pos = {x = x, y=y}
 		local box = {x= 20, y = 20, w = 32, h = 32}
 
@@ -234,7 +234,7 @@ function Fortress:update(dt)
 	end
 
 	--Elargissement
-	local r = (5 + (math.sqrt(self.habitant*2) + math.log(self.habitant * 2))/2 ) * Tileset.TILESIZE*3
+	local r = (5 + (math.sqrt(self.habitant*3) + math.log(self.habitant * 3))/2 ) * Tileset.TILESIZE*2
 	if r > self.pos.r then 
 		self.pos.r = r
 	end
@@ -260,8 +260,8 @@ function Fortress:update(dt)
 
 	self.predHabitant = self.habitant
 
-	engine.screen.map[self.id].shader1:send("r", self.pos.r)
-	engine.screen.map[self.id].shader2:send("r", self.pos.r)
+	engine.shader1:send("r", self.pos.r)
+	engine.shader2:send("r", self.pos.r)
 end
 
 function Fortress:draw()

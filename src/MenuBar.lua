@@ -40,8 +40,8 @@ function MenuBar:update(dt)
 	self.v = engine:vector_rotate(self.v, self.hour/12 *math.pi) -- /24 * 2 => /12
 
 	if self.v.y <= 0 and self.v.x < 0 or self.v.y < 0 and self.v.x >= 0 then
-		engine.screen.map[1].shader1:send("night", 1)
-		engine.screen.map[2].shader2:send("night", 0)
+		engine.shader1:send("night", 1)
+		engine.shader2:send("night", 0)
 
 		self.checkDay[1] = false
 		if not self.checkDay[2] then
@@ -62,8 +62,8 @@ function MenuBar:update(dt)
 			self.checkDay[1] = true
 		end
 
-		engine.screen.map[1].shader1:send("night", 0)
-		engine.screen.map[2].shader2:send("night", 1)
+		engine.shader1:send("night", 0)
+		engine.shader2:send("night", 1)
 		local hour = self.hour - 6
 		engine.screen:generateNightMob(2, hour)
 		self.night = 2
@@ -71,8 +71,8 @@ function MenuBar:update(dt)
 	engine.tileShader:send("night", self.night)
 
 	if false then
-		if mouse:isPressed("l") then
-			local x,y = mouse:wherePressed("l")
+		if mouse:isPressed(1) then
+			local x,y = mouse:wherePressed(1)
 			local box = {x = WINDOW_WIDTH/2 -200, y = 40, w = 140, h = 30}
 			local pos = {x = x, y = y}
 			if engine:AABB_point(box, pos) then

@@ -112,7 +112,7 @@ function Player:update(dt)
 		self.spd.y = self.spd.y * 1 / math.sqrt(2)
 	end
 
-	if keyboard:isPressed(" ") then
+	if keyboard:isPressed("space") then
 		love.audio.stop(engine.sfx.sword)
 		love.audio.play(engine.sfx.sword)
 
@@ -182,8 +182,8 @@ function Player:update(dt)
 		end
 	end
 
-	engine.screen.map[1].shader1:send("player",self.pos.x,self.pos.y)
-	engine.screen.map[2].shader2:send("player",self.pos.x,self.pos.y)
+	engine.shader1:send("player",self.pos.x,self.pos.y)
+	engine.shader2:send("player",self.pos.x,self.pos.y)
 end
 
 function Player:translate()

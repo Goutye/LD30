@@ -38,80 +38,10 @@ function Map:initialize(id)
 		end
 	end
 
-	self.shader1 = love.graphics.newShader[[
-extern float night;
-extern float r;
-extern float player[2];
-
-float distance(vec2 v1, vec2 v2){
-	vec2 v3 = v2 - v1;
-	return sqrt(v3[0]*v3[0] + v3[1] *v3[1]);
-}
-
-vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
-{
-	vec4 pixel = Texel(texture, texture_coords);
-
-	vec2 fortress = vec2(64. * 63.4, 64. * 63.5);
-	vec2 pixelCoords = vec2(pixel_coords[0] + player[0] - (love_ScreenSize.x/4 - 16), (love_ScreenSize.y - pixel_coords[1]) + player[1] - (love_ScreenSize.y/2 + 40 - 16));
-	float dist = distance(fortress, pixelCoords);
-
-	if(dist > r){
-		pixel.rgb = vec3(0.,0.,0.);
-	}
-
-	if(pixel_coords.x >= love_ScreenSize.x/2){
-		pixel.a = 0.;
-	}
-
-	if(night > 0){
-		pixel.rgb *= vec3(0.2,0.2,0.2);
-	}
-
-	return pixel;
-}
-]]
-
-	self.shader2 = love.graphics.newShader[[
-extern float night;
-extern float r;
-extern float player[2];
-
-float distance(vec2 v1, vec2 v2){
-	vec2 v3 = v2 - v1;
-	return sqrt(v3[0]*v3[0] + v3[1] *v3[1]);
-}
-
-vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
-{
-	vec4 pixel = Texel(texture, texture_coords);
-
-	vec2 fortress = vec2(64. * 63.4, 64. * 63.5);
-	vec2 pixelCoords = vec2(pixel_coords[0] + player[0] - (love_ScreenSize.x/4*3 - 16), (love_ScreenSize.y - pixel_coords[1]) + player[1] - (love_ScreenSize.y/2 + 40 - 16));
-	float dist = distance(fortress, pixelCoords);
-
-	if(dist > r){
-		pixel.rgb = vec3(0.,0.,0.);
-	}
-
-	if(pixel_coords.x < love_ScreenSize.x/2){
-		pixel.a = 0.;
-	}
-
-	if(night > 0){
-		pixel.rgb *= vec3(0.2,0.2,0.2);
-	}else{
-
-	}
-
-	return pixel;
-}
-]]
-
-	self.shader1:send("night", 1)
-	self.shader2:send("night", 0)
-	self.shader1:send("r", 100)
-	self.shader2:send("r", 100)
+	engine.shader1:send("night", 1)
+	engine.shader2:send("night", 0)
+	engine.shader1:send("r", 100)
+	engine.shader2:send("r", 100)
 end
 
 function Map:update(dt)
@@ -142,10 +72,10 @@ function Map:draw()
 
 	if self.id == 1 then
 		love.graphics.translate(-pos.x +math.floor(WINDOW_WIDTH/4) - size/2, -pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - size/2)
-		love.graphics.setShader(self.shader1)
+		love.graphics.setShader(engine.shader1)
 	else
 		love.graphics.translate(-pos.x +math.floor(3*WINDOW_WIDTH/4) - size/2, -pos.y +math.floor(WINDOW_HEIGHT/2) + menuH/2 - size/2)
-		love.graphics.setShader(self.shader2)
+		love.graphics.setShader(engine.shader2)
 	end
 
 	for i = 0, nbTile.x do

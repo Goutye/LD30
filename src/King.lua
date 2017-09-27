@@ -19,7 +19,7 @@ function King:initialize(idWorld, fortress, mode)
 	self.portalDiscovered = false
 
 	self.day = 0
-	self.dayBeforeNextWave = love.math.random(1,3)
+	self.dayBeforeNextWave = love.math.random(5,6)
 
 	self.inTravel = false
 	self.nbSoldiers = 0
@@ -33,7 +33,7 @@ function King:initialize(idWorld, fortress, mode)
 end
 
 function King:update(dt)
-	if self.portalDiscovered then
+	if true then
 		if self.inTravel then
 			self.day = 0
 			self.timeTravel = self.timeTravel + dt
@@ -43,7 +43,7 @@ function King:update(dt)
 				self.nbSoldiers = 0
 				self.inTravel = false
 				self.timeTravel = 0
-				self.dayBeforeNextWave = love.math.random(1, 3)
+				self.dayBeforeNextWave = love.math.random(1, 2)
 			end
 		elseif self.day >= self.dayBeforeNextWave and self.fortress.soldat >= 10 then
 			local rand = 0

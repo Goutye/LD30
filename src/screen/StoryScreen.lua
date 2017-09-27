@@ -12,7 +12,7 @@ function StoryScreen:initialize()
 end
 
 function StoryScreen:update(dt)
-	if mouse:isPressed("l") then
+	if mouse:isPressed(1) then
 		if not self.current then
 			self.current = true
 		else

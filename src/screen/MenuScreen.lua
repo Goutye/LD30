@@ -16,8 +16,8 @@ function MenuScreen:initialize()
 end
 
 function MenuScreen:update(dt)
-	if mouse:isReleased("l") or keyboard:isPressed("d") then
-		local x,y = mouse:whereReleased("l")
+	if mouse:isReleased(1) or keyboard:isPressed("d") then
+		local x,y = mouse:whereReleased(1)
 		local pos = {x=x, y=y}
 
 		if(engine:AABB_point(self.button, pos)) then
@@ -31,7 +31,7 @@ function MenuScreen:update(dt)
 			end
 		end
 	end
-	if mouse:isReleased("r") or keyboard:isPressed("a") then
+	if mouse:isReleased(2) or keyboard:isPressed("a") then
 		self.current = self.current - 1
 		if self.current < 0 then
 			self.current = 0
